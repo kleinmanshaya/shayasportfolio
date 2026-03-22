@@ -1,3 +1,4 @@
+console.log("NETLIFY TEST");
 const menuToggle = document.getElementById("menuToggle");
 const siteNav = document.getElementById("siteNav");
 
