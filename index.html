@@ -28,13 +28,14 @@
     </header>
 
     <main>
+      <!-- 1. Hero -->
       <section id="home" class="hero section">
         <span class="hero-label hero-label--left" aria-hidden="true">Tel Aviv · 2026</span>
         <span class="hero-label hero-label--right" aria-hidden="true">Available for Work</span>
         <div class="container hero-inner">
           <div class="hero-copy">
-            <h1 class="hero-name reveal">
-              <span class="hero-row">
+            <h1 class="hero-name">
+              <span class="hero-row hero-row--label">
                 <span class="hero-word hero-word-left type-target" data-text="MY"></span>
                 <span class="hero-word hero-word-right type-target" data-text="PORTFOLIO"></span>
               </span>
@@ -43,10 +44,11 @@
                 <span class="hero-word hero-word-right type-target" data-text="KLEINMAN"></span>
               </span>
             </h1>
-            <p class="hero-tagline">Graphic Designer — Tel Aviv</p>
+            <p class="hero-tagline">Identity, print &amp; type · Tel Aviv</p>
           </div>
         </div>
         <div class="hero-scroll-hint" aria-hidden="true">
+          <span class="hero-scroll-label">Scroll</span>
           <span class="hero-scroll-line"></span>
         </div>
         <div class="hero-ticker" aria-hidden="true">
@@ -71,9 +73,77 @@
         </div>
       </section>
 
+      <!-- 2. Featured Work -->
+      <section id="work" class="section work-section">
+        <div class="container">
+          <h2 class="work-heading reveal">Selected work</h2>
+          <p class="work-intro reveal">Case studies in identity, editorial, and print—context, craft, and constraints laid out in each project.</p>
+          <div class="bounce-grid reveal">
+            <div class="bounce-row">
+              <a href="museum-of-typography.html" class="bounce-card bounce-card--dark" style="background-image: url('images/museum-of-typography/GLASS SIGN MOCKUP.png'); background-size: contain; background-position: center center; background-color: #1c1c1e;">
+                <div class="bounce-card-body">
+                  <span class="bounce-card-tag">branding</span>
+                  <h3 class="bounce-card-title">Museum of Typography</h3>
+                  <p class="bounce-card-desc">Typographic museum identity—contrast, collateral, system end-to-end</p>
+                </div>
+              </a>
+              <a href="kis-library.html" class="bounce-card" style="background-image: url('images/kis-library/kis-library-cover.png'); background-size: cover; background-position: center 30%;">
+                <div class="bounce-card-body">
+                  <span class="bounce-card-tag">branding &amp; book cover design</span>
+                  <h3 class="bounce-card-title">Kis Library</h3>
+                  <p class="bounce-card-desc">Pocket book series—covers, box, and a restrained grid that holds every title</p>
+                </div>
+              </a>
+            </div>
+            <div class="bounce-row bounce-row--flip">
+              <a href="sound-of-concrete.html" class="bounce-card bounce-card--dark" style="background-image: url('images/sound-of-concrete/פוסטר בודד.jpg'); background-size: contain; background-position: center center; background-color: #0d0d0d;">
+                <div class="bounce-card-body">
+                  <span class="bounce-card-tag">poster design</span>
+                  <h3 class="bounce-card-title">Sound of Concrete</h3>
+                  <p class="bounce-card-desc">Three posters—texture, brutalist type, and a read on the city in print</p>
+                </div>
+              </a>
+              <a href="norish.html" class="bounce-card" style="background-image: url('images/norish/both drinks overlap.jpg'); background-size: cover; background-position: center 20%;">
+                <div class="bounce-card-body">
+                  <span class="bounce-card-tag">menu design</span>
+                  <h3 class="bounce-card-title">Norish</h3>
+                  <p class="bounce-card-desc">Client café—menus and identity tuned for legibility where people actually order</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2b. How I work (value strip) -->
+      <section class="principles-section" aria-labelledby="principles-kicker">
+        <div class="container">
+          <p id="principles-kicker" class="principles-kicker reveal">
+            I work best when the ask is a system, not a one-off: type that carries logic, print that survives contact with the real world, and identity that still makes sense on the hundredth application.
+          </p>
+          <ul class="principles-list" role="list">
+            <li class="principle reveal">
+              <span class="principle-label">Approach</span>
+              <span class="principle-text">Concept before aesthetics</span>
+            </li>
+            <li class="principle reveal reveal-delay-1">
+              <span class="principle-label">Craft</span>
+              <span class="principle-text">Type as structure</span>
+            </li>
+            <li class="principle reveal reveal-delay-2">
+              <span class="principle-label">Scope</span>
+              <span class="principle-text">Systems over surfaces</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3. Visual Highlights Slider -->
       <section id="highlights" class="section highlights-section">
         <div class="container">
-          <div class="highlights-slider reveal" data-slider>
+          <h2 class="highlights-heading reveal">Highlights</h2>
+          <p class="highlights-intro reveal">The same projects, in passing—detail, scale, context.</p>
+          <div class="highlights-slider reveal reveal-delay-1" data-slider>
             <div class="highlights-slide is-active" data-slide-index="0">
               <a href="kis-library.html" class="highlight-item">
                 <img src="images/kis-library/kis-library-cover.png" alt="Kis Library packaging" />
@@ -122,62 +192,35 @@
         </div>
       </section>
 
+      <!-- 4. About -->
       <section id="about" class="section about-section">
         <div class="container about-inner">
           <h2 class="about-heading reveal">About</h2>
           <div class="about-text reveal">
-            <p>Hi, I'm Shaya, a Graphic Designer with a deep love for visual storytelling.</p>
-            <p>I specialize in creating meaningful brand identities and visual experiences. I have a true passion for typography and a soft spot for the world of print.</p>
-            <p>I believe in clean, intentional design that doesn't feel like it's trying too hard. Whether I'm building a brand from scratch or working on digital projects, I'm here to make it look sharp and feel real.</p>
-            <p class="about-cta">Let's talk.</p>
+            <p>I'm a graphic designer in Tel Aviv. Most of my work sits where brand identity meets editorial craft and print—places where a grid, a type family, and a color decision have to keep working long after the first mockup.</p>
+            <p>I care about restraint with a reason: fewer moves, but each one accountable. Typography is usually the lever—weight, spacing, and hierarchy doing the persuasion so the layout doesn't have to shout.</p>
+            <p class="about-cta">
+              Open to studio teams, freelance briefs, and roles where the standard is "ship something that holds up."
+              <a href="mailto:kleinmanshaya@gmail.com" class="about-cta-link">Email</a>
+              ·
+              <a href="#contact" class="about-cta-link">Contact</a>
+            </p>
           </div>
         </div>
       </section>
 
-      <section id="work" class="section work-section">
-        <div class="container">
-          <h2 class="work-heading reveal">My Latest Projects</h2>
-          <p class="work-intro reveal">A selection of brand identity, editorial, and poster work.</p>
-          <div class="bounce-grid reveal">
-            <div class="bounce-row">
-              <a href="museum-of-typography.html" class="bounce-card bounce-card--dark" style="background-image: url('images/museum-of-typography/GLASS SIGN MOCKUP.png'); background-size: contain; background-position: center center; background-color: #1c1c1e;">
-                <div class="bounce-card-body">
-                  <span class="bounce-card-tag">branding</span>
-                  <h3 class="bounce-card-title">Museum of Typography</h3>
-                </div>
-              </a>
-              <a href="kis-library.html" class="bounce-card" style="background-image: url('images/kis-library/kis-library-cover.png'); background-size: cover; background-position: center 30%;">
-                <div class="bounce-card-body">
-                  <span class="bounce-card-tag">branding &amp; book cover design</span>
-                  <h3 class="bounce-card-title">Kis Library</h3>
-                </div>
-              </a>
-            </div>
-            <div class="bounce-row bounce-row--flip">
-              <a href="sound-of-concrete.html" class="bounce-card bounce-card--dark" style="background-image: url('images/sound-of-concrete/פוסטר בודד.jpg'); background-size: contain; background-position: center center; background-color: #0d0d0d;">
-                <div class="bounce-card-body">
-                  <span class="bounce-card-tag">poster design</span>
-                  <h3 class="bounce-card-title">Sound of Concrete</h3>
-                </div>
-              </a>
-              <a href="norish.html" class="bounce-card" style="background-image: url('images/norish/morning menu coffee.jpg'); background-size: cover; background-position: center 20%;">
-                <div class="bounce-card-body">
-                  <span class="bounce-card-tag">menu design</span>
-                  <h3 class="bounce-card-title">Norish</h3>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <!-- 5. Contact -->
       <section id="contact" class="section contact-section">
         <div class="container contact-inner">
           <h2 class="contact-heading reveal">Contact</h2>
-          <div class="contact-details reveal">
+          <p class="contact-availability reveal reveal-delay-1">
+            Freelance, internships, junior studio roles—especially branding, editorial, books, posters, and anything that needs a clear system behind it.
+          </p>
+          <div class="contact-details reveal reveal-delay-2">
+            <p><a href="mailto:kleinmanshaya@gmail.com" class="contact-link contact-link--primary">kleinmanshaya@gmail.com</a></p>
             <p><a href="tel:052-790-4696" class="contact-link">052-790-4696</a></p>
-            <p><a href="mailto:kleinmanshaya@gmail.com" class="contact-link">kleinmanshaya@gmail.com</a></p>
           </div>
+          <p class="contact-hint reveal reveal-delay-3">One line on timeline and what you need (PDF, deck, site) helps me answer in kind.</p>
         </div>
       </section>
     </main>

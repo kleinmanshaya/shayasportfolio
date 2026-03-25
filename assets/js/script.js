@@ -1,4 +1,3 @@
-console.log("NETLIFY TEST");
 const menuToggle = document.getElementById("menuToggle");
 const siteNav = document.getElementById("siteNav");
 
@@ -87,18 +86,18 @@ if (typeTargets.length) {
       if (i <= text.length) {
         el.textContent = text.slice(0, i);
         i += 1;
-        setTimeout(step, 70);
+        setTimeout(step, 75);
       } else {
         currentIndex += 1;
-        setTimeout(typeNext, 160);
+        setTimeout(typeNext, 200);
       }
     };
 
     step();
   };
 
-  // Wait a brief moment so reveal animations can apply first
-  window.setTimeout(typeNext, 250);
+  // Start after the hero-name CSS animation has settled
+  window.setTimeout(typeNext, 700);
 }
 
 // Highlights slider
@@ -176,16 +175,15 @@ const galleryData = [];
 const galleryElements = [];
 const galleryContainers = [];
 
-document.querySelectorAll(".project-gallery").forEach((gallery) => {
-  const items = Array.from(gallery.querySelectorAll(".project-item"));
+document.querySelectorAll(".project-media").forEach((gallery) => {
+  const items = Array.from(gallery.querySelectorAll(".media-block"));
   galleryData.push(
     items.map((item) => {
       const img = item.querySelector("img");
-      const cap = item.querySelector(".project-item-caption");
       return {
         src: img ? img.getAttribute("src") || "" : "",
         alt: img ? img.getAttribute("alt") || "" : "",
-        caption: cap ? cap.textContent.trim() : "",
+        caption: img ? img.getAttribute("alt") || "" : "",
       };
     })
   );

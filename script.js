@@ -322,16 +322,19 @@ if (galleryData.length > 0) {
     const data = currentImages[currentImageIndex];
     captionEl.textContent = data.caption || data.alt || "";
     counterEl.textContent = `${currentImageIndex + 1} / ${total}`;
-    prevBtn.disabled = currentImageIndex === 0;
-    nextBtn.disabled = currentImageIndex === total - 1;
+    // Looping carousel: never disable arrows at either end.
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
     indicatorsEl.querySelectorAll(".lightbox-indicator").forEach((dot, i) => {
       dot.classList.toggle("is-active", i === currentImageIndex);
     });
   };
 
   const goTo = (index) => {
-    if (index < 0 || index >= currentImages.length) return;
-    currentImageIndex = index;
+    const total = currentImages.length;
+    if (total === 0) return;
+    // Wrap around so the carousel never "runs out" at either end.
+    currentImageIndex = ((index % total) + total) % total;
     updateUI();
   };
 
@@ -389,9 +392,9 @@ if (galleryData.length > 0) {
     trackEl.style.transition = "";
     const diff = dragCurrentX - dragStartX;
     if (dragMoved) {
-      if (diff <= -40 && currentImageIndex < currentImages.length - 1) {
+      if (diff <= -40) {
         showNext();
-      } else if (diff >= 40 && currentImageIndex > 0) {
+      } else if (diff >= 40) {
         showPrev();
       } else {
         updateUI(); // snap back
