@@ -453,3 +453,16 @@ if (galleryData.length > 0) {
     requestAnimationFrame(() => { trackEl.style.transition = ""; });
   });
 }
+
+// Image loading placeholders
+document.querySelectorAll(".media-block, .highlight-item").forEach((el) => {
+  const img = el.querySelector("img");
+  if (!img) return;
+  const done = () => el.classList.add("is-loaded");
+  if (img.complete && img.naturalWidth > 0) {
+    done();
+  } else {
+    img.addEventListener("load", done);
+    img.addEventListener("error", done);
+  }
+});
