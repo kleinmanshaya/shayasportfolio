@@ -125,18 +125,16 @@ if (slider) {
       dot.classList.toggle("is-active", i === index);
     });
 
-    // Incoming slide: place above viewport, then add is-active so it slides down
     if (nextSlide) {
       nextSlide.classList.add("is-active");
     }
-    // Leaving slide: animate down and remove state after transition
     if (prevSlide) {
       prevSlide.classList.remove("is-active");
       prevSlide.classList.add("is-leaving");
       prevSlide.addEventListener(
         "transitionend",
         function cleanup(e) {
-          if (e.target !== prevSlide || e.propertyName !== "transform") return;
+          if (e.target !== prevSlide || e.propertyName !== "opacity") return;
           prevSlide.classList.remove("is-leaving");
           prevSlide.removeEventListener("transitionend", cleanup);
         },
@@ -157,8 +155,7 @@ if (slider) {
     });
   });
 
-  // optional auto-advance (2s)
-  const AUTO_INTERVAL = 2000;
+  const AUTO_INTERVAL = 2400;
   let auto = window.setInterval(() => setIndex(index + 1), AUTO_INTERVAL);
 
   slider.addEventListener("mouseenter", () => {

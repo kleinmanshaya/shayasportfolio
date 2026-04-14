@@ -482,25 +482,27 @@ ul {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  transform: translateY(-100%);
-  transition: transform 600ms ease-out;
+  opacity: 0;
+  transition: opacity 280ms ease;
   z-index: 1;
 }
 
 .highlights-slide.is-active {
   pointer-events: auto;
-  transform: translateY(0);
+  opacity: 1;
   z-index: 2;
 }
 
 .highlights-slide.is-leaving {
   pointer-events: none;
-  transform: translateY(100%);
+  opacity: 0;
   z-index: 0;
 }
 
 .highlight-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   width: 100%;
   height: 100%;
@@ -513,6 +515,7 @@ ul {
   height: 100%;
   display: block;
   object-fit: cover;
+  object-position: center center;
 }
 
 .highlights-arrow {
@@ -752,22 +755,11 @@ ul {
 .bounce-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--editorial-stack-tight);
-}
-
-.bounce-row {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--editorial-stack-tight);
-}
-
-.bounce-row--flip {
-  grid-template-columns: 2fr 1fr;
+  gap: clamp(2rem, 4vw, 3rem);
 }
 
 .bounce-card {
   position: relative;
-  min-height: clamp(300px, 44vw, 400px);
   overflow: hidden;
   border-radius: var(--radius);
   background-size: cover;
@@ -776,7 +768,17 @@ ul {
   display: block;
   color: #fff;
   text-decoration: none;
-  transition: opacity var(--transition-med);
+  transition: transform var(--transition-med), opacity var(--transition-med);
+}
+
+.bounce-card:hover {
+  transform: scale(1.02);
+  opacity: 0.97;
+}
+
+.bounce-card:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
 }
 
 .bounce-card::before {
@@ -816,13 +818,38 @@ ul {
   );
 }
 
-.bounce-card:hover {
-  opacity: 0.97;
+/* Featured project — full width, visually dominant */
+.bounce-card--featured {
+  min-height: clamp(420px, 56vw, 600px);
 }
 
-.bounce-card:focus-visible {
-  outline: 2px solid var(--text);
-  outline-offset: 4px;
+.bounce-card--featured .bounce-card-body {
+  padding: 2rem clamp(1.5rem, 4vw, 2.5rem) 2.25rem;
+}
+
+.bounce-card--featured .bounce-card-tag {
+  font-size: 0.72rem;
+  margin-bottom: 0.55rem;
+}
+
+.bounce-card--featured .bounce-card-title {
+  font-size: clamp(1.75rem, 3.5vw, 2.8rem);
+}
+
+.bounce-card--featured .bounce-card-desc {
+  font-size: 0.9375rem;
+  max-width: 48ch;
+}
+
+/* Secondary projects — uniform 2x2 grid */
+.bounce-grid-secondary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.875rem, 1.5vw, 1.25rem);
+}
+
+.bounce-grid-secondary .bounce-card {
+  min-height: clamp(220px, 28vw, 300px);
 }
 
 .bounce-card-body {
@@ -831,34 +858,34 @@ ul {
   left: 0;
   right: 0;
   z-index: 1;
-  padding: 1.5rem clamp(1.25rem, 3vw, 1.75rem) 1.65rem;
+  padding: 1.25rem clamp(1rem, 2.5vw, 1.5rem) 1.35rem;
 }
 
 .bounce-card-tag {
   display: block;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .bounce-card-title {
-  font-size: clamp(1.25rem, 2.1vw, 1.85rem);
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: #fff;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.3rem;
 }
 
 .bounce-card-desc {
-  font-size: 0.8125rem;
+  font-size: 0.78rem;
   font-weight: 400;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.72);
-  max-width: 38ch;
+  max-width: 34ch;
   letter-spacing: 0.01em;
   transition: color 250ms ease;
 }
@@ -868,13 +895,17 @@ ul {
 }
 
 @media (max-width: 768px) {
-  .bounce-row,
-  .bounce-row--flip {
+  .bounce-grid-secondary {
     grid-template-columns: 1fr;
+    gap: var(--editorial-stack-tight);
   }
 
-  .bounce-card {
-    min-height: 240px;
+  .bounce-card--featured {
+    min-height: clamp(280px, 60vw, 380px);
+  }
+
+  .bounce-grid-secondary .bounce-card {
+    min-height: 220px;
   }
 }
 
@@ -963,6 +994,7 @@ ul {
 .project-page--museum { --project-accent: #1a1a2e; --project-bg: #f4f4f6; }
 .project-page--sound  { --project-accent: #5c5c5c; --project-bg: #f0efed; }
 .project-page--norish { --project-accent: #b5734a; --project-bg: #faf5f0; }
+.project-page--despair { --project-accent: #2a2a2a; --project-bg: #f2f1ef; }
 
 .project-page {
   padding: 0;
@@ -1190,14 +1222,14 @@ ul {
 /* ---- Museum: Typographic Exploration — alternating text–image rows on 12-col grid ---- */
 .project-page--museum .project-process {
   background: var(--project-bg);
-  padding: clamp(2.25rem, 5vw, 3.5rem) 0 clamp(3rem, 7vw, 5rem);
+  padding: clamp(3rem, 5.5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5rem);
 }
 
 .project-page--museum .project-process-intro {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--project-col-gap);
-  padding-bottom: clamp(2rem, 4.5vw, 3.25rem);
+  column-gap: clamp(2rem, 3.5vw, 3.5rem);
+  padding-bottom: clamp(3rem, 5.5vw, 4rem);
 }
 
 .project-page--museum .project-process-intro-inner {
@@ -1216,20 +1248,20 @@ ul {
 .project-page--museum .project-process-row {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: clamp(4rem, 5.5vw, 6rem);
+  column-gap: clamp(2rem, 3.5vw, 3.5rem);
   align-items: start;
 }
 
 .project-page--museum .project-process-row + .project-process-row {
-  margin-top: clamp(8rem, 12vw, 11rem);
+  margin-top: clamp(5rem, 8vw, 7.5rem);
 }
 
-/* DEFAULT (rows 1 & 3): text LEFT, image RIGHT — image in narrower band */
+/* DEFAULT (rows 1 & 3): text LEFT, image RIGHT */
 .project-page--museum .project-process-row .project-process-annot {
   grid-column: 1 / span 3;
   grid-row: 1;
   min-width: 0;
-  padding-top: 0;
+  padding-top: 0.25rem;
   align-self: start;
 }
 
@@ -1241,14 +1273,14 @@ ul {
   align-self: start;
 }
 
-/* MODIFIER (row 2): image LEFT, text RIGHT — narrower for tall artwork */
+/* MODIFIER (row 2): image LEFT, text RIGHT */
 .project-page--museum .project-process-row--img-left .project-process-figure {
-  grid-column: 1 / span 3;
+  grid-column: 1 / span 5;
   grid-row: 1;
 }
 
 .project-page--museum .project-process-row--img-left .project-process-annot {
-  grid-column: 9 / span 3;
+  grid-column: 8 / span 3;
   grid-row: 1;
 }
 
@@ -1259,7 +1291,7 @@ ul {
 }
 
 .project-page--museum .project-process-kicker {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1284,7 +1316,7 @@ ul {
   .project-page--museum .project-process-row,
   .project-page--museum .project-process-row--img-left {
     grid-template-columns: 1fr;
-    row-gap: clamp(1.25rem, 3.5vw, 1.75rem);
+    row-gap: clamp(1.25rem, 3vw, 1.75rem);
   }
 
   .project-page--museum .project-process-row .project-process-figure,
@@ -1298,21 +1330,21 @@ ul {
   }
 
   .project-page--museum .project-process-row + .project-process-row {
-    margin-top: clamp(5rem, 10vw, 7rem);
+    margin-top: clamp(3.5rem, 7vw, 5rem);
   }
 }
 
 /* ---- Museum: Identity System — alternating text–image rows on 12-col grid ---- */
 .project-page--museum .project-identity-system {
   background: var(--project-bg);
-  padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(3rem, 6.5vw, 4.75rem);
+  padding: clamp(3rem, 5.5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5rem);
 }
 
 .project-page--museum .project-identity-intro {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--project-col-gap);
-  padding-bottom: clamp(7rem, 14vw, 10rem);
+  column-gap: clamp(2rem, 3.5vw, 3.5rem);
+  padding-bottom: clamp(3rem, 5.5vw, 4rem);
 }
 
 .project-page--museum .project-identity-intro-inner {
@@ -1321,23 +1353,22 @@ ul {
 }
 
 .project-page--museum .project-identity-lede {
-  font-size: clamp(0.95rem, 1.75vw, 1.05rem);
-  line-height: 1.75;
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  line-height: 1.8;
   color: var(--text);
   margin: 0;
-  opacity: 0.92;
 }
 
 /* Each row: 12-col grid, generous gutter, top-aligned */
 .project-page--museum .project-identity-row {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: clamp(4rem, 5.5vw, 6rem);
+  column-gap: clamp(2rem, 3.5vw, 3.5rem);
   align-items: start;
 }
 
 .project-page--museum .project-identity-row + .project-identity-row {
-  margin-top: clamp(14rem, 20vw, 18rem);
+  margin-top: clamp(5rem, 8vw, 7.5rem);
 }
 
 /* DEFAULT (rows 1 & 3): text LEFT, image RIGHT */
@@ -1345,12 +1376,12 @@ ul {
   grid-column: 1 / span 3;
   grid-row: 1;
   min-width: 0;
-  padding-top: 0;
+  padding-top: 0.25rem;
   align-self: start;
 }
 
 .project-page--museum .project-identity-row .project-identity-figure {
-  grid-column: 5 / span 8;
+  grid-column: 6 / span 5;
   grid-row: 1;
   margin: 0;
   min-width: 0;
@@ -1359,12 +1390,12 @@ ul {
 
 /* MODIFIER (row 2): image LEFT, text RIGHT */
 .project-page--museum .project-identity-row--img-left .project-identity-figure {
-  grid-column: 1 / span 7;
+  grid-column: 1 / span 5;
   grid-row: 1;
 }
 
 .project-page--museum .project-identity-row--img-left .project-identity-annot {
-  grid-column: 9 / span 3;
+  grid-column: 8 / span 3;
   grid-row: 1;
 }
 
@@ -1377,7 +1408,7 @@ ul {
 .project-page--museum .project-identity-kicker {
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
   margin: 0 0 0.65rem;
@@ -1400,7 +1431,7 @@ ul {
   .project-page--museum .project-identity-row,
   .project-page--museum .project-identity-row--img-left {
     grid-template-columns: 1fr;
-    row-gap: clamp(1rem, 3vw, 1.5rem);
+    row-gap: clamp(1.25rem, 3vw, 1.75rem);
   }
 
   .project-page--museum .project-identity-row .project-identity-figure,
@@ -1414,7 +1445,7 @@ ul {
   }
 
   .project-page--museum .project-identity-row + .project-identity-row {
-    margin-top: clamp(5rem, 10vw, 7rem);
+    margin-top: clamp(3.5rem, 7vw, 5rem);
   }
 }
 
@@ -1503,6 +1534,11 @@ ul {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.media-block--featured {
+  width: calc(100% + 4%);
+  margin-inline: -2%;
 }
 
 /* 2-up row — explicit only */
