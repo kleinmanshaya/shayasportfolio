@@ -1022,7 +1022,7 @@ ul {
   justify-content: space-between;
   padding: 2rem 5% 5rem;
   position: relative;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .project-hero .container {
@@ -1089,7 +1089,7 @@ ul {
 /* Museum of Typography — hero with tighter title-to-image spacing */
 .project-page--museum .project-hero {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
   min-height: clamp(28rem, 48vh, 52vh);
   padding-bottom: 0;
 }
@@ -2092,7 +2092,15 @@ ul {
 
   .project-hero {
     min-height: auto;
-    padding: 1.5rem 0 3.5rem;
+    padding: 2rem 5% 3.5rem 6%;
+  }
+
+  .project-intro,
+  .project-media,
+  .project-shell {
+    width: 87%;
+    margin-left: 6%;
+    margin-right: auto;
   }
 
   .project-page--museum .project-hero .container {

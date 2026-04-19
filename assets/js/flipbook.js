@@ -6,9 +6,9 @@
     this.images = images;
     this.opts = Object.assign(
       {
-        maxShadowOpacity: 0.25,
+        maxShadowOpacity: 0.3,
         showCover: true,
-        flippingTime: 700,
+        flippingTime: 800,
         lazy: true,
         rtl: false,
       },
@@ -35,11 +35,11 @@
         '<div class="flipbook-book"></div>' +
       '</div>' +
       '<div class="flipbook-controls" style="display:none">' +
-        '<button class="flipbook-btn flipbook-prev" type="button" aria-label="Previous page">' +
+        '<button class="flipbook-btn flipbook-next" type="button" aria-label="Next page">' +
           '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 15L7.5 10L12.5 5"/></svg>' +
         '</button>' +
         '<span class="flipbook-counter"></span>' +
-        '<button class="flipbook-btn flipbook-next" type="button" aria-label="Next page">' +
+        '<button class="flipbook-btn flipbook-prev" type="button" aria-label="Previous page">' +
           '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 5L12.5 10L7.5 15"/></svg>' +
         '</button>' +
       '</div>';
@@ -129,19 +129,21 @@
       this.$book.appendChild(div);
     }
 
+    var isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     this.flip = new St.PageFlip(this.$book, {
       width: baseW,
       height: baseH,
       size: 'stretch',
-      maxShadowOpacity: this.opts.maxShadowOpacity,
+      maxShadowOpacity: isMobile ? 0.2 : this.opts.maxShadowOpacity,
       showCover: this.opts.showCover,
       mobileScrollSupport: false,
-      swipeDistance: 30,
-      flippingTime: this.opts.flippingTime,
+      swipeDistance: 20,
+      flippingTime: isMobile ? 600 : this.opts.flippingTime,
       useMouseEvents: true,
       autoSize: true,
       drawShadow: true,
-      showPageCorners: true,
+      showPageCorners: !isMobile,
     });
 
     this.flip.loadFromHTML(this.$book.querySelectorAll('.flipbook-page'));
