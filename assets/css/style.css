@@ -18,7 +18,7 @@
   --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.12);
   --transition-fast: 180ms ease-out;
   --transition-med: 260ms ease-out;
-  /* Vertical rhythm — homepage + case studies */
+  /* Vertical rhythm - homepage + case studies */
   --section-y: clamp(3.25rem, 7vw, 5rem);
   --section-y-lg: clamp(4rem, 9vw, 5.5rem);
   /* Type scale (Space Grotesk) */
@@ -648,7 +648,7 @@ ul {
   outline-offset: 3px;
 }
 
-/* Work – My Latest Projects (Wix-inspired) */
+/* Work - My Latest Projects (Wix-inspired) */
 .work-section {
   padding: var(--section-y-lg) 0;
   text-align: left;
@@ -751,7 +751,7 @@ ul {
   text-underline-offset: 3px;
 }
 
-/* ---- Bouncy Cards — Work Section ---- */
+/* ---- Bouncy Cards - Work Section ---- */
 .bounce-grid {
   display: flex;
   flex-direction: column;
@@ -818,7 +818,7 @@ ul {
   );
 }
 
-/* Featured project — full width, visually dominant */
+/* Featured project - full width, visually dominant */
 .bounce-card--featured {
   min-height: clamp(420px, 56vw, 600px);
 }
@@ -841,7 +841,7 @@ ul {
   max-width: 48ch;
 }
 
-/* Secondary projects — uniform 2x2 grid */
+/* Secondary projects - uniform 2x2 grid */
 .bounce-grid-secondary {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -986,7 +986,7 @@ ul {
 
 
 /* ============================================================
-   PROJECT PAGE — EDITORIAL LAYOUT
+   PROJECT PAGE - EDITORIAL LAYOUT
    ============================================================ */
 
 /* Per-project accent + background tokens */
@@ -1022,7 +1022,6 @@ ul {
   justify-content: space-between;
   padding: 2rem 5% 5rem;
   position: relative;
-  overflow: clip;
 }
 
 .project-hero .container {
@@ -1033,7 +1032,7 @@ ul {
 .project-hero::after {
   content: attr(data-title);
   position: absolute;
-  bottom: -0.08em;
+  bottom: 0;
   left: -0.01em;
   font-size: clamp(9rem, 22vw, 22rem);
   font-weight: 700;
@@ -1046,6 +1045,7 @@ ul {
   user-select: none;
   white-space: nowrap;
   z-index: 0;
+  clip-path: inset(0 0 0 0);
 }
 
 .project-hero-nav {
@@ -1086,10 +1086,9 @@ ul {
   margin: 0;
 }
 
-/* Museum of Typography — hero with tighter title-to-image spacing */
+/* Museum of Typography - hero with tighter title-to-image spacing */
 .project-page--museum .project-hero {
   position: relative;
-  overflow: clip;
   min-height: clamp(28rem, 48vh, 52vh);
   padding-bottom: 0;
 }
@@ -1219,7 +1218,7 @@ ul {
   margin-bottom: clamp(1.25rem, 3vw, 2rem);
 }
 
-/* ---- Museum: Typographic Exploration — alternating text–image rows on 12-col grid ---- */
+/* ---- Museum: Typographic Exploration - alternating text-image rows on 12-col grid ---- */
 .project-page--museum .project-process {
   background: var(--project-bg);
   padding: clamp(3rem, 5.5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5rem);
@@ -1334,7 +1333,7 @@ ul {
   }
 }
 
-/* ---- Museum: Identity System — alternating text–image rows on 12-col grid ---- */
+/* ---- Museum: Identity System - alternating text-image rows on 12-col grid ---- */
 .project-page--museum .project-identity-system {
   background: var(--project-bg);
   padding: clamp(3rem, 5.5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5rem);
@@ -1512,7 +1511,7 @@ ul {
 
 
 /* ============================================================
-   PROJECT MEDIA — editorial case-study layout
+   PROJECT MEDIA - editorial case-study layout
    One centered column. Images stack vertically.
    Use .media-row for a deliberate 2-up or 3-up spread.
    ============================================================ */
@@ -1541,7 +1540,7 @@ ul {
   margin-inline: -2%;
 }
 
-/* 2-up row — explicit only */
+/* 2-up row - explicit only */
 .media-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1685,7 +1684,7 @@ ul {
   }
 }
 
-/* Lightbox – carousel design */
+/* Lightbox - carousel design */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -2122,6 +2121,7 @@ ul {
   }
 
   .project-page--museum .project-hero {
+    min-height: auto;
     padding-bottom: 0;
   }
 

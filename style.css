@@ -378,7 +378,7 @@ ul {
   font-weight: 600;
 }
 
-/* Work – My Latest Projects (Wix-inspired) */
+/* Work - My Latest Projects (Wix-inspired) */
 .work-section {
   padding: 4rem 0;
 }
@@ -479,7 +479,7 @@ ul {
   text-underline-offset: 3px;
 }
 
-/* ---- Bouncy Cards — Work Section ---- */
+/* ---- Bouncy Cards - Work Section ---- */
 .bounce-grid {
   display: flex;
   flex-direction: column;
@@ -679,7 +679,7 @@ ul {
 }
 
 /* ============================================================
-   PROJECT PAGE — EDITORIAL LAYOUT
+   PROJECT PAGE - EDITORIAL LAYOUT
    ============================================================ */
 
 /* Per-project accent + background tokens */
@@ -901,7 +901,7 @@ ul {
   margin-bottom: 0.18rem;
 }
 
-/* Suppress old hover overrides — handled by .project-img-wrap now */
+/* Suppress old hover overrides - handled by .project-img-wrap now */
 .project-page .project-item:hover {
   border-radius: 0;
 }
@@ -922,7 +922,7 @@ ul {
 }
 
 /* ============================================================
-   SCROLL CARDS — Sticky parallax image gallery
+   SCROLL CARDS - Sticky parallax image gallery
    ============================================================ */
 
 .scroll-cards-gallery {
@@ -1086,7 +1086,7 @@ ul {
   transform: translateX(12px);
 }
 
-/* Lightbox – carousel design */
+/* Lightbox - carousel design */
 .lightbox {
   position: fixed;
   inset: 0;
