@@ -44,8 +44,45 @@ if ("IntersectionObserver" in window && revealElements.length) {
 
   revealElements.forEach((el) => observer.observe(el));
 } else {
-  // Fallback: show all immediately
   revealElements.forEach((el) => el.classList.add("visible"));
+}
+
+// Staggered card reveal for project thumbnails
+const cardReveals = document.querySelectorAll(".card-reveal");
+
+if ("IntersectionObserver" in window && cardReveals.length) {
+  const STAGGER = 120;
+  let pending = [];
+  let timer = null;
+
+  const flush = () => {
+    pending.forEach((el, i) => {
+      el.style.transitionDelay = `${i * STAGGER}ms`;
+      el.classList.add("visible");
+    });
+    const batch = pending.slice();
+    const resetDelay = (STAGGER * batch.length) + 600;
+    setTimeout(() => batch.forEach((el) => { el.style.transitionDelay = ""; }), resetDelay);
+    pending = [];
+  };
+
+  const cardObserver = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          pending.push(entry.target);
+          obs.unobserve(entry.target);
+          clearTimeout(timer);
+          timer = setTimeout(flush, 60);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -5% 0px" }
+  );
+
+  cardReveals.forEach((el) => cardObserver.observe(el));
+} else {
+  cardReveals.forEach((el) => el.classList.add("visible"));
 }
 
 // Header style on scroll
@@ -109,6 +146,21 @@ if (slider) {
   const prevBtn = slider.querySelector(".highlights-arrow-prev");
   const nextBtn = slider.querySelector(".highlights-arrow-next");
 
+  const ensureLoaded = (slide) => {
+    if (!slide) return;
+    const img = slide.querySelector("img");
+    if (img && !img.src && img.dataset.src) {
+      img.src = img.dataset.src;
+    }
+  };
+
+  const preloadAround = (idx) => {
+    ensureLoaded(slides[idx]);
+    ensureLoaded(slides[(idx + 1) % slides.length]);
+  };
+
+  preloadAround(0);
+
   let index = 0;
 
   const setIndex = (newIndex) => {
@@ -119,6 +171,8 @@ if (slider) {
 
     const prevSlide = slides[prevIndex];
     const nextSlide = slides[nextIndex];
+
+    preloadAround(nextIndex);
 
     index = nextIndex;
     dots.forEach((dot, i) => {
@@ -195,7 +249,7 @@ if (highlightsSlider) {
     slides.map((slide) => {
       const a = slide.querySelector(".highlight-item");
       const img = a ? a.querySelector("img") : null;
-      const src = img ? (img.getAttribute("src") || img.src || "") : "";
+      const src = img ? (img.getAttribute("src") || img.getAttribute("data-src") || img.src || "") : "";
       return {
         src: src ? (src.startsWith("http") || src.startsWith("/") ? src : new URL(src, window.location.href).href) : "",
         alt: img ? img.getAttribute("alt") || "" : "",
