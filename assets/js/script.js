@@ -51,7 +51,7 @@ if ("IntersectionObserver" in window && revealElements.length) {
 const cardReveals = document.querySelectorAll(".card-reveal");
 
 if ("IntersectionObserver" in window && cardReveals.length) {
-  const STAGGER = 120;
+  const STAGGER = 180;
   let pending = [];
   let timer = null;
 
@@ -145,6 +145,23 @@ if (slider) {
   const dots = Array.from(slider.querySelectorAll(".highlights-dot"));
   const prevBtn = slider.querySelector(".highlights-arrow-prev");
   const nextBtn = slider.querySelector(".highlights-arrow-next");
+  const sliderSection = slider.closest(".highlights-section") || slider.parentElement;
+  const metaProject = sliderSection.querySelector(".highlights-meta-project");
+  const metaCounter = sliderSection.querySelector(".highlights-meta-counter");
+
+  let index = 0;
+
+  const updateMeta = () => {
+    const activeSlide = slides[index];
+    if (metaProject && activeSlide) {
+      metaProject.textContent = activeSlide.dataset.project || "";
+    }
+    if (metaCounter) {
+      metaCounter.textContent = `${index + 1} / ${slides.length}`;
+    }
+  };
+
+  updateMeta();
 
   const ensureLoaded = (slide) => {
     if (!slide) return;
@@ -161,8 +178,6 @@ if (slider) {
 
   preloadAround(0);
 
-  let index = 0;
-
   const setIndex = (newIndex) => {
     const prevIndex = index;
     const nextIndex = (newIndex + slides.length) % slides.length;
@@ -175,6 +190,7 @@ if (slider) {
     preloadAround(nextIndex);
 
     index = nextIndex;
+    updateMeta();
     dots.forEach((dot, i) => {
       dot.classList.toggle("is-active", i === index);
     });
@@ -334,7 +350,7 @@ if (galleryData.length > 0) {
   let dragStartX = 0;
   let dragCurrentX = 0;
 
-  const getSlideWidth = () => trackWrapEl.offsetWidth;
+  const getSlideWidth = () => trackWrapEl.clientWidth;
 
   const buildCarousel = (galleryIdx) => {
     currentImages = galleryData[galleryIdx];
@@ -429,7 +445,7 @@ if (galleryData.length > 0) {
     const diff = dragCurrentX - dragStartX;
     if (Math.abs(diff) > 4) dragMoved = true;
     if (!dragMoved) return;
-    const baseOffset = -currentImageIndex * trackWrapEl.offsetWidth;
+    const baseOffset = -currentImageIndex * trackWrapEl.clientWidth;
     trackEl.style.transform = `translateX(${baseOffset + diff}px)`;
   };
 
@@ -517,3 +533,135 @@ document.querySelectorAll(".media-block, .highlight-item").forEach((el) => {
     img.addEventListener("error", done);
   }
 });
+
+// Hero skills scatter effect
+const heroSkills = document.getElementById("heroSkills");
+
+if (heroSkills) {
+  const skills = [
+    "Branding",
+    "Typography",
+    "Print Design",
+    "Editorial",
+    "Identity Systems",
+    "Poster Design",
+    "Art Direction",
+    "Book Design",
+  ];
+
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const weights = [400, 500, 700];
+  const styles = ["normal", "italic"];
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  skills.forEach((skill) => {
+    const wordSpan = document.createElement("span");
+    wordSpan.className = "hero-skill-word";
+
+    const letters = [];
+    skill.split("").forEach((ch) => {
+      const letterSpan = document.createElement("span");
+      letterSpan.className = "hero-skill-letter";
+      letterSpan.textContent = ch === " " ? "\u00A0" : ch;
+      wordSpan.appendChild(letterSpan);
+      letters.push(letterSpan);
+    });
+
+    if (!prefersReducedMotion) {
+      let timeouts = [];
+
+      const jitter = () => {
+        timeouts.forEach((t) => clearTimeout(t));
+        timeouts = [];
+        letters.forEach((l, i) => {
+          const t = setTimeout(() => {
+            const rotation = rand(-26, 26).toFixed(1);
+            const offsetY = rand(-7, 6).toFixed(1);
+            const offsetX = rand(-2, 2).toFixed(1);
+            const scale = rand(0.92, 1.22).toFixed(2);
+            l.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg) scale(${scale})`;
+            l.style.fontWeight = pick(weights);
+            l.style.fontStyle = pick(styles);
+            l.style.color = "var(--text)";
+          }, i * 28);
+          timeouts.push(t);
+        });
+      };
+
+      const reset = () => {
+        timeouts.forEach((t) => clearTimeout(t));
+        timeouts = [];
+        letters.forEach((l, i) => {
+          const t = setTimeout(() => {
+            l.style.transform = "translate(0, 0) rotate(0deg) scale(1)";
+            l.style.fontWeight = "";
+            l.style.fontStyle = "";
+            l.style.color = "";
+          }, i * 16);
+          timeouts.push(t);
+        });
+      };
+
+      wordSpan.addEventListener("mouseenter", jitter);
+      wordSpan.addEventListener("mouseleave", reset);
+    }
+
+    heroSkills.appendChild(wordSpan);
+  });
+}
+
+// Work index row hover
+const workIndexRows = document.querySelectorAll(".work-index-row");
+
+workIndexRows.forEach((row) => {
+  row.addEventListener("mouseenter", () => {
+    row.classList.add("is-hovering");
+  });
+  row.addEventListener("mouseleave", () => {
+    row.classList.remove("is-hovering");
+  });
+});
+
+const cursorDot = document.getElementById("cursorDot");
+const cursorRing = document.getElementById("cursorRing");
+
+if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
+  let mouseX = 0;
+  let mouseY = 0;
+  let ringX = 0;
+  let ringY = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + "px";
+    cursorDot.style.top = mouseY + "px";
+    document.body.classList.remove("cursor-hidden");
+  });
+
+  document.addEventListener("mouseleave", () => {
+    document.body.classList.add("cursor-hidden");
+  });
+
+  const animateRing = () => {
+    ringX += (mouseX - ringX) * 0.45;
+    ringY += (mouseY - ringY) * 0.45;
+    cursorRing.style.left = ringX + "px";
+    cursorRing.style.top = ringY + "px";
+    requestAnimationFrame(animateRing);
+  };
+  animateRing();
+
+  const hoverTargets = document.querySelectorAll(
+    "a, button, .work-index-row, .bounce-card, .highlights-dot, .highlights-arrow, .hero-skill-word"
+  );
+
+  hoverTargets.forEach((el) => {
+    el.addEventListener("mouseenter", () => cursorRing.classList.add("is-hover"));
+    el.addEventListener("mouseleave", () => cursorRing.classList.remove("is-hover"));
+  });
+}
