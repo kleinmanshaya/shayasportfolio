@@ -101,7 +101,8 @@ if (header) {
   window.addEventListener("scroll", updateHeader, { passive: true });
 }
 
-// Typewriter for hero title
+// Scramble reveal for hero title - words in the same row scramble together,
+// rows run one after another
 const typeTargets = Array.from(document.querySelectorAll(".type-target"));
 
 if (typeTargets.length) {
@@ -111,30 +112,76 @@ if (typeTargets.length) {
     el.textContent = "";
   });
 
-  let currentIndex = 0;
+  const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const prefersReducedMotionType = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-  const typeNext = () => {
-    if (currentIndex >= typeTargets.length) return;
-    const el = typeTargets[currentIndex];
+  const rows = [];
+  typeTargets.forEach((el) => {
+    const rowEl = el.closest(".hero-row") || el.parentElement;
+    let group = rows.find((r) => r.rowEl === rowEl);
+    if (!group) {
+      group = { rowEl, els: [] };
+      rows.push(group);
+    }
+    group.els.push(el);
+  });
+
+  const scrambleWord = (el, onDone) => {
     const text = el.dataset.text || "";
-    let i = 0;
+
+    if (prefersReducedMotionType) {
+      el.textContent = text;
+      onDone();
+      return;
+    }
+
+    let revealed = 0;
+    let frame = 0;
 
     const step = () => {
-      if (i <= text.length) {
-        el.textContent = text.slice(0, i);
-        i += 1;
-        setTimeout(step, 75);
+      frame += 1;
+      if (frame % 2 === 0 && revealed < text.length) revealed += 1;
+
+      let out = "";
+      for (let i = 0; i < text.length; i += 1) {
+        if (i < revealed || text[i] === " ") {
+          out += text[i];
+        } else {
+          out += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+        }
+      }
+      el.textContent = out;
+
+      if (revealed >= text.length) {
+        el.textContent = text;
+        onDone();
       } else {
-        currentIndex += 1;
-        setTimeout(typeNext, 200);
+        setTimeout(step, 40);
       }
     };
 
     step();
   };
 
+  const runRow = (rowIndex) => {
+    if (rowIndex >= rows.length) return;
+    const group = rows[rowIndex];
+    let remaining = group.els.length;
+
+    group.els.forEach((el) => {
+      scrambleWord(el, () => {
+        remaining -= 1;
+        if (remaining === 0) {
+          setTimeout(() => runRow(rowIndex + 1), 200);
+        }
+      });
+    });
+  };
+
   // Start after the hero-name CSS animation has settled
-  window.setTimeout(typeNext, 700);
+  window.setTimeout(() => runRow(0), 700);
 }
 
 // Highlights slider
@@ -626,35 +673,148 @@ workIndexRows.forEach((row) => {
   });
 });
 
+// Work index cursor-following preview image
+const workIndex = document.getElementById("workIndex");
+const workPreview = document.getElementById("workPreview");
+const workPreviewImg = document.getElementById("workPreviewImg");
+
+if (
+  workIndex &&
+  workPreview &&
+  workPreviewImg &&
+  workIndexRows.length &&
+  window.matchMedia("(hover: hover)").matches
+) {
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let scale = 0.88;
+  let targetScale = 0.88;
+  let rotation = 0;
+  let active = false;
+  let hasPosition = false;
+
+  const loop = () => {
+    currentX += (targetX - currentX) * 0.16;
+    currentY += (targetY - currentY) * 0.16;
+    scale += (targetScale - scale) * 0.16;
+    workPreview.style.transform =
+      `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) ` +
+      `rotate(${rotation}deg) scale(${scale})`;
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+
+  workIndex.addEventListener("mousemove", (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!hasPosition) {
+      currentX = targetX;
+      currentY = targetY;
+      hasPosition = true;
+    }
+  });
+
+  workIndexRows.forEach((row) => {
+    const img = row.querySelector(".work-index-thumb-img");
+    row.addEventListener("mouseenter", () => {
+      if (img) {
+        workPreviewImg.src = img.currentSrc || img.src;
+        workPreviewImg.alt = img.alt || "";
+      }
+      rotation = active ? rotation : (Math.random() * 5 - 2.5).toFixed(2);
+      active = true;
+      targetScale = 1;
+      workPreview.classList.add("is-visible");
+    });
+    row.addEventListener("mouseleave", () => {
+      active = false;
+      targetScale = 0.88;
+      workPreview.classList.remove("is-visible");
+    });
+  });
+}
+
+// Project hero title: scramble-decode reveal, per line (preserves <br> stacking)
+document.querySelectorAll(".project-hero-title-text").forEach((el) => {
+  const lines = el.innerHTML.split(/<br\s*\/?>/i).map((line) => line.trim());
+  const hero = el.closest(".project-hero");
+  const reducedMotionTitle = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const START_DELAY = 480;
+  const LINE_STAGGER = 140;
+  const FRAME_MS = 40;
+
+  el.innerHTML = "";
+  let tailMs = 0;
+
+  lines.forEach((text, lineIndex) => {
+    const span = document.createElement("span");
+    span.className = "scramble-line";
+    el.appendChild(span);
+    if (lineIndex < lines.length - 1) el.appendChild(document.createElement("br"));
+
+    const delay = START_DELAY + lineIndex * LINE_STAGGER;
+    const estDuration = Math.ceil(text.length / 2) * FRAME_MS + FRAME_MS;
+    tailMs = Math.max(tailMs, delay + estDuration);
+
+    if (reducedMotionTitle) {
+      span.textContent = text;
+      span.classList.add("is-resolved");
+      return;
+    }
+
+    setTimeout(() => {
+      let revealed = 0;
+      let frame = 0;
+
+      const step = () => {
+        frame += 1;
+        if (frame % 2 === 0 && revealed < text.length) revealed += 1;
+
+        let out = "";
+        for (let i = 0; i < text.length; i += 1) {
+          if (i < revealed || text[i] === " ") {
+            out += text[i];
+          } else {
+            out += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+          }
+        }
+        span.textContent = out;
+
+        if (revealed >= text.length) {
+          span.textContent = text;
+          span.classList.add("is-resolved");
+        } else {
+          setTimeout(step, FRAME_MS);
+        }
+      };
+
+      step();
+    }, delay);
+  });
+
+  if (hero) hero.style.setProperty("--reveal-tail", `${tailMs}ms`);
+});
+
 const cursorDot = document.getElementById("cursorDot");
 const cursorRing = document.getElementById("cursorRing");
 
 if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
-  let mouseX = 0;
-  let mouseY = 0;
-  let ringX = 0;
-  let ringY = 0;
-
   document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursorDot.style.left = mouseX + "px";
-    cursorDot.style.top = mouseY + "px";
+    const x = e.clientX;
+    const y = e.clientY;
+    cursorDot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    cursorRing.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
     document.body.classList.remove("cursor-hidden");
   });
 
   document.addEventListener("mouseleave", () => {
     document.body.classList.add("cursor-hidden");
   });
-
-  const animateRing = () => {
-    ringX += (mouseX - ringX) * 0.45;
-    ringY += (mouseY - ringY) * 0.45;
-    cursorRing.style.left = ringX + "px";
-    cursorRing.style.top = ringY + "px";
-    requestAnimationFrame(animateRing);
-  };
-  animateRing();
 
   const hoverTargets = document.querySelectorAll(
     "a, button, .work-index-row, .bounce-card, .highlights-dot, .highlights-arrow, .hero-skill-word"

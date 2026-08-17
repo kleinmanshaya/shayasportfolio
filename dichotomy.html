@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dichotomy | Shaya Kleinman</title>
+    <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/flipbook.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <a href="index.html" class="logo"><img src="assets/img/logo.svg" alt="Shaya Kleinman" class="logo-img" /></a>
+        <nav class="site-nav" id="siteNav">
+          <a href="index.html">Home</a>
+          <a href="index.html#work">Work</a>
+          <a href="other-work.html">Other Work</a>
+        </nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+      </div>
+    </header>
+
+    <main class="project-page project-page--dichotomy">
+
+      <section class="project-hero">
+        <div class="container">
+          <div class="project-hero-top">
+            <nav class="project-hero-nav">
+              <a href="index.html#work" class="back-link">← All Work</a>
+              <span class="project-hero-tag"><span class="project-hero-num">05</span>Zine &amp; Illustration</span>
+            </nav>
+            <hr class="project-hero-rule" />
+            <h1 class="project-hero-title"><span class="project-hero-title-text">Dichotomy</span></h1>
+          </div>
+          <div class="project-hero-bottom">
+            <hr class="project-hero-rule" />
+            <p class="project-hero-desc">A short illustrated zine about the pull to divide anything into two clean, opposing halves. Two figures move through the pages - merged, walking together, holding hands, then slowly coming apart. The drawings argue with the definition on the opening page: the line between the two never quite closes.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="project-intro reveal">
+        <p class="project-intro-subtitle">Zine &amp; Illustration</p>
+        <dl class="project-meta">
+          <div class="project-meta-item card-reveal">
+            <dt class="project-meta-label">Type</dt>
+            <dd class="project-meta-value">Zine &amp; Illustration</dd>
+          </div>
+          <div class="project-meta-item card-reveal">
+            <dt class="project-meta-label">Year</dt>
+            <dd class="project-meta-value">2026</dd>
+          </div>
+          <div class="project-meta-item card-reveal">
+            <dt class="project-meta-label">Role</dt>
+            <dd class="project-meta-value">Illustration, Editorial Design, Concept</dd>
+          </div>
+          <div class="project-meta-item card-reveal">
+            <dt class="project-meta-label">Context</dt>
+            <dd class="project-meta-value">Personal Project</dd>
+          </div>
+        </dl>
+        <p>Dichotomy (n.): the division of a concept, phenomenon, or group into two separate, opposing parts, presented as a binary distinction - a split that often flattens the real complexity underneath it. The zine opens with that definition, then spends the rest of its pages quietly disagreeing with it in line drawings of two figures who start out indistinguishable from one another and, wordlessly, slowly become two.</p>
+        <p>This is the latest issue in a series of personal zines I make alongside my client work.</p>
+      </div>
+
+      <div class="project-media">
+
+        <figure class="media-block card-reveal">
+          <img loading="lazy" decoding="async" src="images/dichotomy/mockup-cover.jpg" alt="Dichotomy zine cover, a small stitched booklet" />
+        </figure>
+
+        <div class="media-row">
+          <figure class="media-block card-reveal">
+            <img loading="lazy" decoding="async" src="images/dichotomy/mockup-spread-45.jpg" alt="Dichotomy zine spread showing two merged figures, heads bowed together" />
+          </figure>
+          <figure class="media-block card-reveal">
+            <img loading="lazy" decoding="async" src="images/dichotomy/mockup-spread-89.jpg" alt="Dichotomy zine spread showing two figures walking apart, still holding hands" />
+          </figure>
+        </div>
+
+        <figure class="media-block card-reveal">
+          <img loading="lazy" decoding="async" src="images/dichotomy/mockup-spread-1011.jpg" alt="Dichotomy zine closing spread with faint, drifting-apart marks" />
+        </figure>
+
+      </div>
+
+      <section class="project-flipbook-section reveal">
+        <div class="project-shell">
+          <header class="project-flipbook-header">
+            <h2 class="project-section-title">Read the Zine</h2>
+          </header>
+          <div id="dichotomy-flipbook"></div>
+        </div>
+      </section>
+
+      <nav class="project-nav-footer reveal">
+        <a href="index.html#work" class="project-nav-back">← All Work</a>
+        <a href="museum-of-typography.html" class="project-next">
+          <div class="project-next-info">
+            <span class="project-next-label">Next Project</span>
+            <span class="project-next-name">Museum of Typography</span>
+          </div>
+          <span class="project-next-arrow">→</span>
+        </a>
+      </nav>
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <p>© 2026 Shaya Kleinman. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <script src="assets/js/script.js"></script>
+    <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+    <script src="assets/js/flipbook.js"></script>
+    <script>
+      new Flipbook('#dichotomy-flipbook', [
+        'images/dichotomy/page-1.jpg',
+        'images/dichotomy/page-2.jpg',
+        'images/dichotomy/page-3.jpg',
+        'images/dichotomy/page-4.jpg',
+        'images/dichotomy/page-5.jpg',
+        'images/dichotomy/page-6.jpg',
+        'images/dichotomy/page-7.jpg',
+        'images/dichotomy/page-8.jpg',
+        'images/dichotomy/page-9.jpg',
+        'images/dichotomy/page-10.jpg',
+        'images/dichotomy/page-11.jpg',
+        'images/dichotomy/page-12.jpg'
+      ], { rtl: true });
+    </script>
+  </body>
+</html>
