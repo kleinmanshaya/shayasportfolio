@@ -1,5 +1,10 @@
 document.documentElement.classList.add("js");
 
+// Only surrender the native cursor if the custom one is really going to run.
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  document.documentElement.classList.add("has-custom-cursor");
+}
+
 const menuToggle = document.getElementById("menuToggle");
 const siteNav = document.getElementById("siteNav");
 

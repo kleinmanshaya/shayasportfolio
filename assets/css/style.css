@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* The custom cursor only replaces the native one once JS is actually
+   running. Without it the page keeps a real pointer instead of none. */
+.js.has-custom-cursor * {
   cursor: none;
 }
 
@@ -47,8 +52,47 @@
   opacity: 0;
 }
 
+/* ---- Keyboard focus ----------------------------------------------------
+   One visible treatment for every focusable thing. Individual components
+   override the offset where a tight inset reads better. */
+:where(a, button, [tabindex], summary, input, textarea, select):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.work-index-row:focus-visible,
+.highlight-item:focus-visible,
+.project-next:focus-visible {
+  outline-offset: -3px;
+}
+
+.highlights-dot:focus-visible {
+  outline-offset: 1px;
+}
+
+/* A keyboard user should be able to skip the nav on every page. */
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100%;
+  z-index: 1200;
+  background: var(--text);
+  color: var(--bg);
+  padding: 0.7rem 1.1rem;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  transition: top 160ms ease-out;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
 @media (max-width: 768px), (hover: none) {
-  * {
+  .js.has-custom-cursor * {
     cursor: auto;
   }
   .cursor-dot,
@@ -83,6 +127,11 @@
   --section-y-lg: clamp(4rem, 9vw, 5.5rem);
   /* One measure for running text, one for every section gap */
   --prose: 65ch;
+  /* Section alignment. These two move together - set to `center` and `auto`
+     to centre every heading and measure on the site, or leave as-is for the
+     grid-aligned default. Nothing else needs touching. */
+  --section-align: left;
+  --measure-inline: 0;
   /* Type scale (Poppins body, Big Shoulders Display headlines) - 7 steps */
   --t-label: 0.75rem;                          /* 12 - uppercase, tracked   */
   --t-small: 0.875rem;                         /* 14 - captions, footer     */
@@ -373,7 +422,7 @@ ul {
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 1.5rem;
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 /* chained off the scramble finishing rather than a fixed 3.3s wait */
@@ -547,9 +596,9 @@ ul {
   line-height: var(--leading-body);
   color: var(--muted);
   max-width: 42rem;
-  margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
+  margin: 0 var(--measure-inline) clamp(1.25rem, 3vw, 1.75rem);
   letter-spacing: -0.01em;
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .principles-list {
@@ -561,11 +610,16 @@ ul {
 .principle {
   padding: 0 1.5rem;
   border-left: 1px solid var(--border);
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .principle:first-child {
+  padding-left: 0;
   border-left: none;
+}
+
+.principle:last-child {
+  padding-right: 0;
 }
 
 .principle-label {
@@ -619,16 +673,16 @@ ul {
   line-height: 1.05;
   color: var(--text);
   margin-bottom: 0.45rem;
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .highlights-intro {
   font-size: var(--text-body-sm);
   color: var(--muted);
   line-height: var(--leading-tight);
-  margin: 0 auto 1.75rem;
+  margin: 0 var(--measure-inline) 1.75rem;
   max-width: 36ch;
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .highlights-slider {
@@ -782,12 +836,12 @@ ul {
 }
 
 .about-inner {
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .about-text {
   max-width: var(--prose);
-  margin-inline: auto;
+  margin-inline: var(--measure-inline);
 }
 
 .about-heading {
@@ -849,7 +903,7 @@ ul {
   line-height: 1.05;
   color: var(--text);
   margin-bottom: 0.45rem;
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .work-intro {
@@ -858,8 +912,8 @@ ul {
   color: var(--muted);
   margin-bottom: 2.5rem;
   max-width: 48ch;
-  margin-inline: auto;
-  text-align: center;
+  margin-inline: var(--measure-inline);
+  text-align: var(--section-align);
 }
 
 /* ---- Work index list ---- */
@@ -923,17 +977,25 @@ ul {
   font-size: 0.5em;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--muted);
+  color: var(--muted);
   vertical-align: super;
-  margin-left: 0.2em;
-  opacity: 0.7;
-  transition: opacity 300ms ease, -webkit-text-stroke-color 300ms ease;
+  margin-left: 0.25em;
+  opacity: 1;
+  transition: color 300ms ease, -webkit-text-stroke-color 300ms ease;
+}
+
+/* Outlined numerals only where the stroke is supported, so the index still
+   numbers itself in browsers that do not do text-stroke. */
+@supports (-webkit-text-stroke: 1px currentColor) {
+  .work-index-num {
+    color: transparent;
+    -webkit-text-stroke: 1.4px var(--muted);
+  }
 }
 
 .work-index-row:hover .work-index-num,
 .work-index-row.is-hovering .work-index-num {
-  opacity: 1;
+  color: var(--accent);
   -webkit-text-stroke-color: var(--accent);
 }
 
@@ -1084,7 +1146,7 @@ ul {
 }
 
 /* below 560 the two-column row squeezes titles to three lines - stack instead */
-@media (max-width: 560px) {
+@media (max-width: 640px) {
   .work-index-row,
   .work-index .work-index-row--featured {
     grid-template-columns: 1fr;
@@ -1207,7 +1269,7 @@ ul {
 }
 
 .contact-inner {
-  text-align: center;
+  text-align: var(--section-align);
 }
 
 .contact-heading {
@@ -1225,7 +1287,7 @@ ul {
   color: var(--muted);
   line-height: var(--leading-body);
   max-width: var(--prose);
-  margin: 0 auto 2rem;
+  margin: 0 var(--measure-inline) 2rem;
 }
 
 .contact-details {
@@ -1260,8 +1322,8 @@ ul {
   line-height: 1.55;
   color: var(--muted);
   max-width: 32ch;
-  margin: 0 auto;
-  opacity: 0.9;
+  margin: 0 var(--measure-inline);
+  text-align: var(--section-align);
 }
 
 .contact-link:focus-visible {
@@ -1498,7 +1560,9 @@ ul {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
+  margin-top: 0;
   margin-bottom: 1.25rem;
+  line-height: var(--leading-body);
 }
 
 .project-intro p {
@@ -1650,7 +1714,7 @@ ul {
   margin: 0;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .project-page--museum .project-process-intro-inner {
     grid-column: 1 / -1;
   }
@@ -1765,7 +1829,7 @@ ul {
   margin: 0;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .project-page--museum .project-identity-intro-inner {
     grid-column: 1 / -1;
   }
@@ -1830,7 +1894,7 @@ ul {
   color: var(--text);
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .project-meta {
     grid-template-columns: repeat(2, 1fr);
   }
