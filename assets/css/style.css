@@ -1715,6 +1715,11 @@ ul {
 }
 
 @media (max-width: 768px) {
+  .project-page--museum .project-process-intro {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
   .project-page--museum .project-process-intro-inner {
     grid-column: 1 / -1;
   }
@@ -1830,6 +1835,11 @@ ul {
 }
 
 @media (max-width: 768px) {
+  .project-page--museum .project-identity-intro {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
   .project-page--museum .project-identity-intro-inner {
     grid-column: 1 / -1;
   }
@@ -2663,5 +2673,160 @@ ul {
   .print-media {
     grid-template-columns: 1fr;
     gap: 2.25rem;
+  }
+}
+/* ============================================================
+   Reduced motion - one blanket rule so nothing animates for
+   anyone who has asked it not to. The site had 52 declared
+   animations and transitions against three narrow opt-outs.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Nothing should be left mid-reveal when the animation is cut. */
+  .js .reveal,
+  .js .card-reveal,
+  .js .hero-tagline,
+  .hero-name {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   Print - a portfolio for a print designer should print.
+   Drops the chrome, opens the type out to the page, and lets
+   the work run at full width with sensible page breaks.
+   ============================================================ */
+@media print {
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #ffffff;
+    --surface: #ffffff;
+    --text: #000000;
+    --muted: #444444;
+    --border: #cccccc;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Screen-only furniture */
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .cursor-dot,
+  .cursor-ring,
+  .work-preview,
+  .menu-toggle,
+  .highlights-arrow,
+  .highlights-dots,
+  .lightbox,
+  .project-nav-footer,
+  .hero-skills {
+    display: none !important;
+  }
+
+  /* Nothing hidden behind an observer or animation that never
+     resolves on paper - this printed the name in grey. */
+  .js .reveal,
+  .js .card-reveal,
+  .js .hero-tagline,
+  .hero-name,
+  .hero-label,
+  .project-hero-title {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .section,
+  .work-section,
+  .highlights-section,
+  .about-section,
+  .contact-section,
+  .principles-section {
+    padding: 0 0 1.2cm !important;
+  }
+
+  .hero {
+    min-height: 0 !important;
+    padding: 0 0 1cm !important;
+  }
+
+  .hero-name {
+    font-size: 48pt !important;
+  }
+
+  .container,
+  .project-media,
+  .project-intro {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  .work-index-title,
+  .project-hero-title {
+    break-after: avoid;
+  }
+
+  .work-index-row {
+    break-inside: avoid;
+    min-height: 0 !important;
+  }
+
+  .work-index-arrow {
+    display: none !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    break-inside: avoid;
+    filter: none !important;
+  }
+
+  /* Only one slide exists on paper */
+  .highlights-slide {
+    position: static !important;
+    opacity: 0 !important;
+  }
+
+  .highlights-slide.is-active {
+    opacity: 1 !important;
+  }
+
+  .highlights-slider {
+    aspect-ratio: auto !important;
+    height: auto !important;
+  }
+
+  /* Give the reader the URLs they can no longer click */
+  main a[href^="http"]::after,
+  main a[href^="mailto"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #444;
+    word-break: break-all;
+  }
+
+  @page {
+    margin: 1.6cm;
   }
 }
