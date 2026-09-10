@@ -16,7 +16,7 @@
   <body>
     <header class="site-header">
       <div class="container nav">
-        <a href="#home" class="logo"><img src="assets/img/logo.svg" alt="Shaya Kleinman" class="logo-img" /></a>
+        <a href="#home" class="logo"><img src="assets/img/logo.svg" alt="Shaya Kleinman" class="logo-img" width="489" height="648" decoding="async" fetchpriority="high" /></a>
         <nav class="site-nav" id="siteNav">
           <a href="#home">Home</a>
           <a href="#work">Work</a>
@@ -24,7 +24,7 @@
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </nav>
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span class="menu-label">Menu</span> <span class="menu-icon">☰</span></button>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu" aria-controls="siteNav" aria-expanded="false"><span class="menu-label">Menu</span> <span class="menu-icon">☰</span></button>
       </div>
     </header>
 
@@ -37,18 +37,27 @@
           <div class="hero-copy">
             <h1 class="hero-name">
               <span class="hero-row hero-row--label">
-                <span class="hero-word hero-word-left type-target" data-text="MY"></span>
-                <span class="hero-word hero-word-right type-target" data-text="PORTFOLIO"></span>
+                <span class="hero-word hero-word-left type-target" data-text="MY">MY</span>
+                <span class="hero-word hero-word-right type-target" data-text="PORTFOLIO">PORTFOLIO</span>
               </span>
               <span class="hero-row">
-                <span class="hero-word hero-word-left type-target" data-text="SHAYA"></span>
-                <span class="hero-word hero-word-right type-target" data-text="KLEINMAN"></span>
+                <span class="hero-word hero-word-left type-target" data-text="SHAYA">SHAYA</span>
+                <span class="hero-word hero-word-right type-target" data-text="KLEINMAN">KLEINMAN</span>
               </span>
             </h1>
-            <p class="hero-tagline">Identity, print &amp; type · Tel Aviv</p>
+            <p class="hero-tagline">Identity, print &amp; type</p>
           </div>
         </div>
-        <div class="hero-skills" id="heroSkills" aria-label="Skills: Branding, Typography, Print Design, Editorial, Identity Systems, Poster Design, Art Direction, Book Design"></div>
+        <div class="hero-skills" id="heroSkills">
+          <span class="hero-skill-word">Branding</span>
+          <span class="hero-skill-word">Typography</span>
+          <span class="hero-skill-word">Print Design</span>
+          <span class="hero-skill-word">Editorial</span>
+          <span class="hero-skill-word">Identity Systems</span>
+          <span class="hero-skill-word">Poster Design</span>
+          <span class="hero-skill-word">Art Direction</span>
+          <span class="hero-skill-word">Book Design</span>
+        </div>
       </section>
 
       <!-- 2. Featured Work -->
@@ -64,7 +73,7 @@
                 <span class="work-index-arrow">View project →</span>
               </div>
               <div class="work-index-thumb">
-                <img src="images/museum-of-typography/compressed%20images/mot-sign-mockup.png" alt="Museum of Typography" class="work-index-thumb-img">
+                <img src="images/thumbs/mot-sign-mockup-thumb.jpg" alt="Museum of Typography" class="work-index-thumb-img" width="800" height="600" decoding="async">
               </div>
             </a>
 
@@ -75,7 +84,7 @@
                 <span class="work-index-arrow">View project →</span>
               </div>
               <div class="work-index-thumb">
-                <img src="images/kis-library/kis-library-cover.png" alt="Kis Library" class="work-index-thumb-img">
+                <img src="images/kis-library/kis-library-cover.png" alt="Kis Library" class="work-index-thumb-img" width="1024" height="768" decoding="async">
               </div>
             </a>
 
@@ -86,7 +95,7 @@
                 <span class="work-index-arrow">View project →</span>
               </div>
               <div class="work-index-thumb">
-                <img src="images/norish/both%20drinks%20overlap.jpg" alt="Norish" class="work-index-thumb-img">
+                <img src="images/thumbs/both%20drinks%20overlap-thumb.jpg" alt="Norish" class="work-index-thumb-img" width="800" height="600" decoding="async">
               </div>
             </a>
 
@@ -97,7 +106,7 @@
                 <span class="work-index-arrow">View project →</span>
               </div>
               <div class="work-index-thumb">
-                <img src="images/sound-of-concrete/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93.jpg" alt="Sound of Concrete" class="work-index-thumb-img">
+                <img src="images/thumbs/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93-thumb.jpg" alt="Sound of Concrete" class="work-index-thumb-img" width="800" height="533" decoding="async">
               </div>
             </a>
 
@@ -108,7 +117,7 @@
                 <span class="work-index-arrow">View project →</span>
               </div>
               <div class="work-index-thumb">
-                <img src="images/dichotomy/mockup-cover.jpg" alt="Dichotomy" class="work-index-thumb-img">
+                <img src="images/dichotomy/mockup-cover.jpg" alt="Dichotomy" class="work-index-thumb-img" width="1105" height="1332" decoding="async">
               </div>
             </a>
           </div>
@@ -149,72 +158,72 @@
           <div class="highlights-slider reveal reveal-delay-1" data-slider>
             <div class="highlights-slide is-active" data-slide-index="0" data-project="Kis Library">
               <a href="kis-library.html" class="highlight-item">
-                <img decoding="async" src="images/kis-library/kis-library-cover.png" alt="Kis Library packaging" />
+                <img decoding="async" src="images/kis-library/kis-library-cover.png" alt="Kis Library packaging" / width="1024" height="768" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="1" data-project="Kis Library">
               <a href="kis-library.html" class="highlight-item">
-                <img decoding="async" data-src="images/kis-library/Three_Books_Box_Mockup_6.jpg" alt="Kis Library books box" />
+                <img decoding="async" data-src="images/kis-library/Three_Books_Box_Mockup_6.jpg" alt="Kis Library books box" / width="1800" height="1350" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="2" data-project="Museum of Typography">
               <a href="museum-of-typography.html" class="highlight-item">
-                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/GLASS%20SIGN%20MOCKUP.jpg" alt="Museum of Typography glass sign" />
+                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/GLASS%20SIGN%20MOCKUP.jpg" alt="Museum of Typography glass sign" / width="1800" height="1350" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="3" data-project="Museum of Typography">
               <a href="museum-of-typography.html" class="highlight-item">
-                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/new%20postcards%20mockup.jpg" alt="Museum of Typography postcards" />
+                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/new%20postcards%20mockup.jpg" alt="Museum of Typography postcards" / width="1800" height="1350" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="4" data-project="Sound of Concrete">
               <a href="sound-of-concrete.html" class="highlight-item">
-                <img decoding="async" data-src="images/sound-of-concrete/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93.jpg" alt="Sound of Concrete hero poster" />
+                <img decoding="async" data-src="images/sound-of-concrete/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93.jpg" alt="Sound of Concrete hero poster" / width="1800" height="1200" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="5" data-project="Sound of Concrete">
               <a href="sound-of-concrete.html" class="highlight-item">
-                <img decoding="async" data-src="images/sound-of-concrete/%D7%9E%D7%95%D7%A7%D7%90%D7%A4%20%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%A8%D7%97%D7%95%D7%91.jpg" alt="Sound of Concrete poster in street" />
+                <img decoding="async" data-src="images/sound-of-concrete/%D7%9E%D7%95%D7%A7%D7%90%D7%A4%20%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%A8%D7%97%D7%95%D7%91.jpg" alt="Sound of Concrete poster in street" / width="1800" height="1200" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="6" data-project="Sound of Concrete">
               <a href="sound-of-concrete.html" class="highlight-item">
-                <img decoding="async" data-src="images/sound-of-concrete/%D7%9E%D7%95%D7%A7%D7%90%D7%A43%20%D7%A4%D7%95%D7%A1%D7%98%D7%A8%D7%99%D7%9D%20%D7%A7%D7%95%D7%9C%20%D7%94%D7%91%D7%98%D7%95%D7%9F.jpg" alt="Sound of Concrete three posters together" />
+                <img decoding="async" data-src="images/sound-of-concrete/%D7%9E%D7%95%D7%A7%D7%90%D7%A43%20%D7%A4%D7%95%D7%A1%D7%98%D7%A8%D7%99%D7%9D%20%D7%A7%D7%95%D7%9C%20%D7%94%D7%91%D7%98%D7%95%D7%9F.jpg" alt="Sound of Concrete three posters together" / width="1800" height="1350" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="7" data-project="Norish">
               <a href="norish.html" class="highlight-item">
-                <img decoding="async" data-src="images/norish/both%20drinks.jpg" alt="Norish drinks" />
+                <img decoding="async" data-src="images/norish/both%20drinks.jpg" alt="Norish drinks" / width="1800" height="1350" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="8" data-project="Museum of Typography">
               <a href="museum-of-typography.html" class="highlight-item">
-                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/POSTER%20MOCKUP.jpg" alt="Museum of Typography poster mockup" />
+                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/POSTER%20MOCKUP.jpg" alt="Museum of Typography poster mockup" / width="1800" height="1350" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="9" data-project="Museum of Typography">
               <a href="museum-of-typography.html" class="highlight-item">
-                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/ticket%20mockup.jpg" alt="Museum of Typography ticket mockup" />
+                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/ticket%20mockup.jpg" alt="Museum of Typography ticket mockup" / width="1800" height="1200" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="10" data-project="Kis Library">
               <a href="kis-library.html" class="highlight-item">
-                <img decoding="async" data-src="images/kis-library/%D7%9E%D7%95%D7%A7%D7%90%D7%A4%20%D7%9E%D7%90%D7%A8%D7%96.jpg" alt="Kis Library box mockup" />
+                <img decoding="async" data-src="images/kis-library/%D7%9E%D7%95%D7%A7%D7%90%D7%A4%20%D7%9E%D7%90%D7%A8%D7%96.jpg" alt="Kis Library box mockup" / width="1800" height="1260" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="11" data-project="Kis Library">
               <a href="kis-library.html" class="highlight-item">
-                <img decoding="async" data-src="images/kis-library/%D7%9E%D7%95%D7%A7%D7%90%D7%A4%D7%AA%D7%99%D7%A7%D7%91%D7%93%D7%A1%D7%A4%D7%A8%D7%99%D7%99%D7%AA%D7%9B%D7%99%D7%A1.jpg" alt="Kis Library tote bag" />
+                <img decoding="async" data-src="images/kis-library/%D7%9E%D7%95%D7%A7%D7%90%D7%A4%D7%AA%D7%99%D7%A7%D7%91%D7%93%D7%A1%D7%A4%D7%A8%D7%99%D7%99%D7%AA%D7%9B%D7%99%D7%A1.jpg" alt="Kis Library tote bag" / width="1800" height="1200" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="12" data-project="Museum of Typography">
               <a href="museum-of-typography.html" class="highlight-item">
-                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/NEW%20Mockup%20LETTERPRESS%20KIT.jpg" alt="Museum of Typography letterpress kit" />
+                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/NEW%20Mockup%20LETTERPRESS%20KIT.jpg" alt="Museum of Typography letterpress kit" / width="1800" height="1152" loading="lazy" decoding="async">
               </a>
             </div>
             <div class="highlights-slide" data-slide-index="13" data-project="Museum of Typography">
               <a href="museum-of-typography.html" class="highlight-item">
-                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/NEW%20MOCKUP%20PLAYING%20CARDS.jpg" alt="Museum of Typography playing cards" />
+                <img decoding="async" data-src="images/museum-of-typography/compressed%20images/NEW%20MOCKUP%20PLAYING%20CARDS.jpg" alt="Museum of Typography playing cards" / width="1800" height="1200" loading="lazy" decoding="async">
               </a>
             </div>
             <button class="highlights-arrow highlights-arrow-prev" type="button" aria-label="Previous project">
@@ -287,7 +296,7 @@
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </nav>
-        <a href="assets/cv/shaya-kleinman-cv.pdf" download class="footer-cv-link">Download CV (Hebrew)</a>
+        <a href="assets/Shaya_Kleinman_CV.pdf" download class="footer-cv-link">Download CV (Hebrew)</a>
         <p class="footer-copy">© 2026 Shaya Kleinman</p>
       </div>
     </footer>

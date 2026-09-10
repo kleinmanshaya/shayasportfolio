@@ -1,15 +1,22 @@
+document.documentElement.classList.add("js");
+
 const menuToggle = document.getElementById("menuToggle");
 const siteNav = document.getElementById("siteNav");
 
 if (menuToggle && siteNav) {
+  const setMenu = (open) => {
+    siteNav.classList.toggle("active", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+  };
+
   menuToggle.addEventListener("click", () => {
-    siteNav.classList.toggle("active");
+    setMenu(!siteNav.classList.contains("active"));
   });
 
   const navLinks = siteNav.querySelectorAll("a");
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      siteNav.classList.remove("active");
+      setMenu(false);
     });
   });
 }
@@ -107,10 +114,17 @@ const typeTargets = Array.from(document.querySelectorAll(".type-target"));
 
 if (typeTargets.length) {
   typeTargets.forEach((el) => {
-    const initial = (el.dataset.text || "").toUpperCase();
+    const initial = (el.dataset.text || el.textContent || "").toUpperCase();
     el.dataset.text = initial;
-    el.textContent = "";
+    el.textContent = initial;
   });
+
+  const heroTagline = document.querySelector(".hero-tagline");
+  const finishHero = () => {
+    if (heroTagline) heroTagline.classList.add("is-in");
+  };
+  // safety net: the tagline must never depend on the effect completing
+  window.setTimeout(finishHero, 3000);
 
   const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const prefersReducedMotionType = window.matchMedia(
@@ -166,7 +180,10 @@ if (typeTargets.length) {
   };
 
   const runRow = (rowIndex) => {
-    if (rowIndex >= rows.length) return;
+    if (rowIndex >= rows.length) {
+      finishHero();
+      return;
+    }
     const group = rows[rowIndex];
     let remaining = group.els.length;
 
@@ -181,7 +198,14 @@ if (typeTargets.length) {
   };
 
   // Start after the hero-name CSS animation has settled
-  window.setTimeout(() => runRow(0), 700);
+  if (prefersReducedMotionType) {
+    finishHero();
+  } else {
+    window.setTimeout(() => {
+      typeTargets.forEach((el) => { el.textContent = ""; });
+      runRow(0);
+    }, 400);
+  }
 }
 
 // Highlights slider
@@ -569,7 +593,7 @@ if (galleryData.length > 0) {
 }
 
 // Image loading placeholders
-document.querySelectorAll(".media-block, .highlight-item").forEach((el) => {
+document.querySelectorAll(".media-block, .highlight-item, .work-index-thumb").forEach((el) => {
   const img = el.querySelector("img");
   if (!img) return;
   const done = () => el.classList.add("is-loaded");
@@ -605,9 +629,16 @@ if (heroSkills) {
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  skills.forEach((skill) => {
-    const wordSpan = document.createElement("span");
+  const existing = Array.from(heroSkills.querySelectorAll(".hero-skill-word"));
+
+  const source = existing.length
+    ? existing.map((el) => el.textContent.trim())
+    : skills;
+
+  source.forEach((skill, wordIndex) => {
+    const wordSpan = existing[wordIndex] || document.createElement("span");
     wordSpan.className = "hero-skill-word";
+    wordSpan.textContent = "";
 
     const letters = [];
     skill.split("").forEach((ch) => {
@@ -657,7 +688,7 @@ if (heroSkills) {
       wordSpan.addEventListener("mouseleave", reset);
     }
 
-    heroSkills.appendChild(wordSpan);
+    if (!wordSpan.parentNode) heroSkills.appendChild(wordSpan);
   });
 }
 

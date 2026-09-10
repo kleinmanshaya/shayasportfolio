@@ -67,6 +67,12 @@
   --accent: #d6202c;
   --border: #e5e7eb;
   --max-width: 1320px;
+  /* Floating nav box: one source of truth for its height */
+  --nav-box-h: 64px;
+  /* Shared by the nav box and the hero rows that align to it. */
+  --nav-box-w: min(90%, var(--max-width));
+  --header-pad: clamp(0.75rem, 2vw, 1.25rem);
+  --header-h: calc(var(--nav-box-h) + var(--header-pad) * 2);
   --gutter: max(5%, calc((100% - var(--max-width)) / 2));
   --radius: 0;
   --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.12);
@@ -75,10 +81,21 @@
   /* Vertical rhythm - homepage + case studies */
   --section-y: clamp(3.25rem, 7vw, 5rem);
   --section-y-lg: clamp(4rem, 9vw, 5.5rem);
-  /* Type scale (Poppins body, Big Shoulders Display headlines) */
-  --text-body: 1.0625rem;
-  --text-body-sm: 0.9375rem;
-  --text-label: 0.75rem;
+  /* One measure for running text, one for every section gap */
+  --prose: 65ch;
+  /* Type scale (Poppins body, Big Shoulders Display headlines) - 7 steps */
+  --t-label: 0.75rem;                          /* 12 - uppercase, tracked   */
+  --t-small: 0.875rem;                         /* 14 - captions, footer     */
+  --t-body: 1.0625rem;                         /* 17 - all running prose    */
+  --t-lead: 1.375rem;                          /* 22 - section intros       */
+  --t-h2: clamp(1.75rem, 3vw, 2.125rem);       /* the missing heading tier  */
+  --t-title: clamp(2.25rem, 4.5vw, 3.5rem);    /* work items, next project  */
+  --t-display: clamp(2.75rem, 12.5vw, 11rem);  /* hero + project titles     */
+  --track-label: 0.15em;
+  /* aliases so existing rules keep resolving */
+  --text-body: var(--t-body);
+  --text-body-sm: var(--t-small);
+  --text-label: var(--t-label);
   --leading-body: 1.75;
   --leading-tight: 1.35;
   /* Case-study image rhythm (editorial / exhibition) */
@@ -167,24 +184,33 @@ ul {
 .site-header {
   position: sticky;
   top: 0;
-  background: rgba(248, 247, 244, 0.96);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border);
   z-index: 1000;
-  transition: background 200ms ease-out, box-shadow 200ms ease-out,
-    transform 200ms ease-out;
+  padding: var(--header-pad) 0;
+  /* The rail itself is empty space - only the box should catch clicks. */
+  pointer-events: none;
 }
 
-.site-header.scrolled {
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
-  transform: translateY(-2px);
-}
-
+/* The box: hugs its contents, centred in the viewport, floating over the page. */
 .nav {
+  pointer-events: auto;
+  position: relative;
+  width: var(--nav-box-w);
+  margin-inline: auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 72px;
+  justify-content: center;
+  gap: clamp(1.25rem, 4vw, 2.75rem);
+  min-height: var(--nav-box-h);
+  padding-inline: clamp(1rem, 3vw, 1.75rem);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  transition: box-shadow 200ms ease-out, border-color 200ms ease-out;
+}
+
+.site-header.scrolled .nav {
+  box-shadow: var(--shadow-soft);
 }
 
 .logo {
@@ -195,20 +221,24 @@ ul {
 }
 
 .logo-img {
-  height: 48px;
+  height: 40px;
   width: auto;
   display: block;
 }
 
 .site-nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .site-nav a {
   color: var(--muted);
   position: relative;
   padding-bottom: 0.1rem;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   transition: color var(--transition-fast);
 }
 
@@ -225,13 +255,36 @@ ul {
 
 .menu-toggle {
   display: none;
-  font-size: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  flex: 0 0 auto;
   background: none;
-  border: none;
+  border: 1px solid var(--border);
   cursor: pointer;
   color: var(--text);
-  padding: 0.35rem;
-  margin: -0.35rem;
+  /* Silences the button's own text, whether that is a glyph or a label. */
+  font-size: 0;
+  line-height: 0;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+/* Three bars from one pseudo-element, so no markup change is needed. */
+.menu-toggle::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+}
+
+.menu-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .menu-toggle:focus-visible {
@@ -259,25 +312,27 @@ ul {
 .hero-inner {
   position: relative;
   z-index: 1;
-  max-width: 680px;
 }
 
 .hero-eyebrow {
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin: 0 0 1rem;
 }
 
 .hero-name {
-  font-size: clamp(2.6rem, 8vw, 4.8rem);
+  font-size: var(--t-display);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.005em;
   color: var(--text);
   margin: 0;
+}
+
+.js .hero-name {
   animation: hero-name-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -292,7 +347,7 @@ ul {
 }
 
 .hero-row--label {
-  font-size: clamp(1.3rem, 4vw, 2.4rem);
+  font-size: clamp(1rem, 3.2vw, 2.6rem);
 }
 
 .hero-word {
@@ -309,18 +364,34 @@ ul {
 
 .hero-copy {
   text-align: left;
-  padding: 0 clamp(1rem, 4vw, 3rem);
 }
 
 .hero-tagline {
   font-size: 0.75rem;
   font-weight: 400;
-  letter-spacing: 0.2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 1.5rem;
   text-align: center;
-  animation: hero-el-fade 600ms ease-out 3300ms both;
+}
+
+/* chained off the scramble finishing rather than a fixed 3.3s wait */
+.js .hero-tagline {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+.js .hero-tagline.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-tagline {
+    transition: none;
+  }
 }
 
 .hero-scroll-hint {
@@ -337,9 +408,9 @@ ul {
 }
 
 .hero-scroll-label {
-  font-size: 0.68rem;
+  font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--text);
   opacity: 0.55;
@@ -371,9 +442,9 @@ ul {
 /* Hero corner labels */
 .hero-label {
   position: absolute;
-  font-size: 0.62rem;
+  font-size: var(--t-label);
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   white-space: nowrap;
@@ -381,6 +452,10 @@ ul {
   z-index: 1;
   pointer-events: none;
   user-select: none;
+  opacity: 0.65;
+}
+
+.js .hero-label {
   animation: hero-label-fade 500ms ease-out 400ms both;
 }
 
@@ -395,11 +470,11 @@ ul {
 }
 
 .hero-label--left {
-  left: 2rem;
+  left: var(--gutter);
 }
 
 .hero-label--right {
-  right: 2rem;
+  right: var(--gutter);
 }
 
 /* Hero skills */
@@ -407,35 +482,27 @@ ul {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem 0;
-  max-width: 720px;
-  width: 100%;
-  padding: 0 1rem;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  width: var(--nav-box-w);
+  margin-inline: auto;
+  padding: 0;
   z-index: 1;
 }
 
 .hero-skill-word {
   font-family: "Poppins", sans-serif;
-  font-size: 0.72rem;
+  font-size: var(--t-label);
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   cursor: default;
   display: inline-flex;
 }
 
-.hero-skill-word::after {
-  content: "·";
-  margin: 0 0.8rem;
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-.hero-skill-word:last-child::after {
-  display: none;
-}
+/* no inline separator: it strands a dot at whichever word ends a wrapped
+   line. The gap on .hero-skills does the separating instead. */
 
 .hero-skill-letter {
   display: inline-block;
@@ -451,26 +518,38 @@ ul {
 }
 
 @media (max-width: 900px) {
-  .hero-label { display: none; }
+  .hero-label {
+    bottom: 1.25rem;
+    font-size: var(--t-label);
+    letter-spacing: var(--track-label);
+  }
+
+  .hero-label--left {
+    left: var(--gutter);
+  }
+
+  .hero-label--right {
+    right: var(--gutter);
+  }
 }
 
 /* ---- Design Principles strip ---- */
 .principles-section {
-  padding: clamp(2rem, 4vw, 2.75rem) 0;
+  padding: var(--section-y-lg) 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   background: var(--bg);
 }
 
 .principles-kicker {
-  font-size: var(--text-body-sm);
+  font-size: var(--t-body);
   font-weight: 400;
   line-height: var(--leading-body);
   color: var(--muted);
   max-width: 42rem;
-  margin: 0 0 clamp(1.25rem, 3vw, 1.75rem);
+  margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
   letter-spacing: -0.01em;
-  text-align: left;
+  text-align: center;
 }
 
 .principles-list {
@@ -480,20 +559,20 @@ ul {
 }
 
 .principle {
-  padding: 0 0 0 2rem;
+  padding: 0 1.5rem;
   border-left: 1px solid var(--border);
+  text-align: center;
 }
 
 .principle:first-child {
-  padding-left: 0;
   border-left: none;
 }
 
 .principle-label {
   display: block;
-  font-size: 0.62rem;
+  font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   opacity: 0.6;
@@ -502,7 +581,7 @@ ul {
 
 .principle-text {
   display: block;
-  font-size: 0.95rem;
+  font-size: var(--t-body);
   font-weight: 500;
   color: var(--text);
   line-height: 1.3;
@@ -533,21 +612,23 @@ ul {
 }
 
 .highlights-heading {
-  font-family: "Poppins", sans-serif;
-  font-size: var(--text-label);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--text);
   margin-bottom: 0.45rem;
+  text-align: center;
 }
 
 .highlights-intro {
   font-size: var(--text-body-sm);
   color: var(--muted);
   line-height: var(--leading-tight);
-  margin: 0 0 1.75rem;
+  margin: 0 auto 1.75rem;
   max-width: 36ch;
+  text-align: center;
 }
 
 .highlights-slider {
@@ -558,7 +639,7 @@ ul {
   margin-left: 0;
   overflow: hidden;
   aspect-ratio: 3 / 2;
-  max-height: min(78vh, 960px);
+  background: var(--bg-alt);
 }
 
 .highlights-slide {
@@ -597,7 +678,7 @@ ul {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
 }
 
@@ -612,7 +693,7 @@ ul {
   border-radius: 0;
   background: transparent;
   color: var(--text);
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 300;
   line-height: 1;
   display: flex;
@@ -658,9 +739,9 @@ ul {
   align-items: baseline;
   margin-top: 0.9rem;
   font-family: "Poppins", sans-serif;
-  font-size: 0.7rem;
+  font-size: var(--t-label);
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -680,7 +761,9 @@ ul {
 .highlights-dot {
   width: 1.25rem;
   height: 2px;
-  padding: 0;
+  padding: 11px 0;
+  background-clip: content-box;
+  box-sizing: content-box;
   border: none;
   border-radius: 0;
   background: var(--border);
@@ -699,18 +782,21 @@ ul {
 }
 
 .about-inner {
-  max-width: 640px;
-  margin: 0 auto;
   text-align: center;
 }
 
+.about-text {
+  max-width: var(--prose);
+  margin-inline: auto;
+}
+
 .about-heading {
-  font-family: "Poppins", sans-serif;
-  font-size: var(--text-label);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--text);
   margin-bottom: 1.75rem;
 }
 
@@ -756,23 +842,24 @@ ul {
 }
 
 .work-heading {
-  font-family: "Poppins", sans-serif;
-  font-size: var(--text-label);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--text);
   margin-bottom: 0.45rem;
-  text-align: left;
+  text-align: center;
 }
 
 .work-intro {
-  font-size: var(--text-body-sm);
+  font-size: var(--t-lead);
   line-height: var(--leading-body);
   color: var(--muted);
   margin-bottom: 2.5rem;
   max-width: 48ch;
-  text-align: left;
+  margin-inline: auto;
+  text-align: center;
 }
 
 /* ---- Work index list ---- */
@@ -821,16 +908,14 @@ ul {
   transform: scaleY(1);
 }
 
-.work-index-row--featured {
-  min-height: 208px;
-}
+
 
 .work-index-content {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 1.25rem 0 1rem;
+  padding: 0 1.25rem 0 0;
   z-index: 2;
 }
 
@@ -857,12 +942,12 @@ ul {
   color: var(--text);
   letter-spacing: -0.01em;
   margin-top: 0.15rem;
-  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
   transition: transform 300ms ease;
 }
 
 .work-index-row--featured .work-index-title {
-  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+  font-size: var(--t-title);
 }
 
 .work-index-row:hover .work-index-title,
@@ -871,10 +956,10 @@ ul {
 }
 
 .work-index-tag {
-  font-size: 0.7rem;
+  font-size: var(--t-label);
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--track-label);
   margin-top: 0.3rem;
   transition: transform 300ms ease;
 }
@@ -891,7 +976,7 @@ ul {
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 1rem;
-  opacity: 0;
+  opacity: 0.5;
   transform: translateX(0);
   transition: opacity 300ms ease, transform 300ms ease;
 }
@@ -906,21 +991,28 @@ ul {
   position: relative;
   overflow: hidden;
   margin: 16px 0;
+  align-self: center;
 }
 
 .work-index-row--featured .work-index-thumb {
   margin: 20px 0;
 }
 
+/* the featured row breaks the beat with a bigger image, not a taller box */
+.work-index .work-index-row--featured {
+  grid-template-columns: 1fr clamp(140px, 24vw, 320px);
+}
+
 .work-index-thumb-img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: center;
   filter: grayscale(85%) contrast(1.03);
   transform: scale(1);
-  transition: transform 550ms ease, filter 450ms ease;
+  transition: transform 550ms ease, filter 450ms ease, opacity 400ms ease;
 }
 
 .work-index-row--featured .work-index-thumb-img {
@@ -982,8 +1074,36 @@ ul {
     margin: 12px 0;
   }
 
+  .work-index-content {
+    padding-right: 1rem;
+  }
+
   .work-index-arrow {
-    display: none;
+    margin-top: 0.5rem;
+  }
+}
+
+/* below 560 the two-column row squeezes titles to three lines - stack instead */
+@media (max-width: 560px) {
+  .work-index-row,
+  .work-index .work-index-row--featured {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 1.25rem 0;
+  }
+
+  .work-index-content {
+    padding: 0;
+    order: 2;
+  }
+
+  .work-index-thumb {
+    order: 1;
+    margin: 0 0 0.9rem;
+  }
+
+  .work-index-thumb-img {
+    aspect-ratio: 16 / 9;
   }
 }
 
@@ -1065,7 +1185,7 @@ ul {
 }
 
 /* ---- Card reveal animation ---- */
-.card-reveal {
+.js .card-reveal {
   opacity: 0;
   transform: translateY(18px);
   transition:
@@ -1074,7 +1194,7 @@ ul {
   will-change: opacity, transform;
 }
 
-.card-reveal.visible {
+.js .card-reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1083,30 +1203,28 @@ ul {
 .contact-section {
   padding: var(--section-y-lg) 0;
   background: var(--surface);
-  text-align: center;
+  text-align: left;
 }
 
 .contact-inner {
-  max-width: 480px;
-  margin: 0 auto;
   text-align: center;
 }
 
 .contact-heading {
-  font-family: "Poppins", sans-serif;
-  font-size: var(--text-label);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--text);
   margin-bottom: 1.35rem;
 }
 
 .contact-availability {
-  font-size: var(--text-body-sm);
+  font-size: var(--t-body);
   color: var(--muted);
   line-height: var(--leading-body);
-  max-width: 38ch;
+  max-width: var(--prose);
   margin: 0 auto 2rem;
 }
 
@@ -1130,7 +1248,7 @@ ul {
 }
 
 .contact-link--primary {
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 4.2vw, 1.375rem);
   font-weight: 600;
   color: var(--accent);
   text-underline-offset: 4px;
@@ -1138,7 +1256,7 @@ ul {
 }
 
 .contact-hint {
-  font-size: 0.8125rem;
+  font-size: var(--t-small);
   line-height: 1.55;
   color: var(--muted);
   max-width: 32ch;
@@ -1175,7 +1293,7 @@ ul {
 
 .back-link {
   display: inline-block;
-  font-size: 0.88rem;
+  font-size: var(--t-small);
   color: var(--muted);
   transition: color var(--transition-fast);
 }
@@ -1195,7 +1313,7 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: calc(100svh - 73px);
+  min-height: calc(100svh - var(--header-h));
   padding-top: clamp(2rem, 5vw, 3rem);
   padding-bottom: clamp(2.5rem, 6vw, 4rem);
 }
@@ -1217,7 +1335,7 @@ ul {
 .project-hero-tag {
   font-size: var(--text-label);
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -1395,7 +1513,7 @@ ul {
 }
 
 .project-intro-note {
-  font-size: 0.62rem;
+  font-size: var(--t-label);
   color: var(--muted);
   opacity: 0.25;
   margin-top: 1.5rem;
@@ -1515,9 +1633,9 @@ ul {
 }
 
 .project-page--museum .project-process-kicker {
-  font-size: 0.62rem;
+  font-size: var(--t-label);
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin: 0 0 0.65rem;
@@ -1630,9 +1748,9 @@ ul {
 }
 
 .project-page--museum .project-identity-kicker {
-  font-size: 0.62rem;
+  font-size: var(--t-label);
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin: 0 0 0.65rem;
@@ -1696,9 +1814,9 @@ ul {
 
 .project-meta-label {
   display: block;
-  font-size: 0.68rem;
+  font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 0.35rem;
@@ -1760,9 +1878,18 @@ ul {
   display: block;
 }
 
+/* a two-up row reads as a pair, so both cells share one box */
+.media-row .media-block {
+  aspect-ratio: 4 / 3;
+}
+
+.media-row .media-block img {
+  height: 100%;
+  object-fit: cover;
+}
+
 .media-block--featured {
-  width: calc(100% + 4%);
-  margin-inline: -2%;
+  width: 100%;
 }
 
 /* 2-up row - explicit only */
@@ -1804,8 +1931,7 @@ ul {
   }
 
   .highlights-slider {
-    max-height: none;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
   }
 }
 
@@ -1835,7 +1961,7 @@ ul {
   display: block;
   font-size: var(--text-label);
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 0.45rem;
@@ -1881,9 +2007,9 @@ ul {
   align-items: center;
   padding: 3rem 2.5rem 3rem var(--gutter);
   border-right: 1px solid var(--border);
-  font-size: 0.72rem;
+  font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
@@ -2089,7 +2215,7 @@ ul {
 }
 
 .lightbox-counter {
-  font-size: 0.7rem;
+  font-size: var(--t-label);
   color: var(--muted);
   opacity: 0.6;
   font-variant-numeric: tabular-nums;
@@ -2177,7 +2303,7 @@ ul {
 }
 
 .site-footer {
-  padding: 2rem 0;
+  padding: var(--section-y-lg) 0 2rem;
   border-top: 1px solid var(--border);
 }
 
@@ -2195,7 +2321,10 @@ ul {
 }
 
 .footer-nav a {
-  font-size: 0.9rem;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   color: var(--muted);
   padding: 0.35rem 0;
   display: inline-block;
@@ -2212,7 +2341,7 @@ ul {
 }
 
 .footer-cv-link {
-  font-size: 0.78rem;
+  font-size: var(--t-label);
   font-weight: 400;
   color: var(--muted);
   text-decoration: underline;
@@ -2225,7 +2354,7 @@ ul {
 }
 
 .footer-copy {
-  font-size: 0.85rem;
+  font-size: var(--t-label);
   color: var(--muted);
   margin: 0;
 }
@@ -2267,7 +2396,8 @@ ul {
 }
 
 .media-block:not(.is-loaded),
-.highlight-item:not(.is-loaded) {
+.highlight-item:not(.is-loaded),
+.work-index-thumb:not(.is-loaded) {
   background-color: #ebebeb;
   animation: placeholder-pulse 2s ease-in-out infinite;
 }
@@ -2277,7 +2407,8 @@ ul {
 }
 
 .media-block:not(.is-loaded) img,
-.highlight-item:not(.is-loaded) img {
+.highlight-item:not(.is-loaded) img,
+.work-index-thumb:not(.is-loaded) .work-index-thumb-img {
   opacity: 0;
 }
 
@@ -2290,8 +2421,9 @@ ul {
   background-color: #ebebeb;
 }
 
-/* Scroll reveal */
-.reveal {
+/* Scroll reveal - only hidden once JS has taken over, so the page
+   stays fully readable if the script never runs */
+.js .reveal {
   opacity: 0;
   transform: translateY(24px);
   transition:
@@ -2300,7 +2432,7 @@ ul {
   will-change: opacity, transform;
 }
 
-.reveal.visible {
+.js .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -2364,16 +2496,21 @@ ul {
 
   .site-nav {
     position: absolute;
-    top: 72px;
-    right: 5%;
-    background: white;
+    top: calc(100% + 1px);
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    text-align: center;
+    background: var(--bg);
     border: 1px solid var(--border);
+    border-top: none;
     border-radius: 0;
     padding: 1rem;
     display: none;
     flex-direction: column;
     min-width: 200px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 90vw;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   }
 
   .site-nav.active {
@@ -2381,28 +2518,18 @@ ul {
   }
 
   .menu-toggle {
-    display: block;
+    display: inline-flex;
   }
 
-  .menu-toggle .menu-label {
-    display: none;
+  .hero-tagline {
+    margin-top: 2rem;
   }
+}
 
-  .hero-name {
-    font-size: clamp(2.5rem, 10vw, 5rem);
-  }
-
-  .hero-row {
-    grid-template-columns: 1fr;
-    gap: 0.05em;
-  }
-
-  .hero-row--label {
-    margin-bottom: 0.15em;
-  }
-
-  .hero-word-right {
-    text-align: left;
+@media (max-width: 900px) {
+  .hero {
+    min-height: 88vh;
+    min-height: 88svh;
   }
 }
 
@@ -2457,7 +2584,7 @@ ul {
 }
 
 .print-meta {
-  font-size: 0.7rem;
+  font-size: var(--t-label);
   color: var(--muted);
   white-space: nowrap;
 }
