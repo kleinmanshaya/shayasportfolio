@@ -630,31 +630,17 @@ const cursorDot = document.getElementById("cursorDot");
 const cursorRing = document.getElementById("cursorRing");
 
 if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
-  let mouseX = 0;
-  let mouseY = 0;
-  let ringX = 0;
-  let ringY = 0;
-
   document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursorDot.style.left = mouseX + "px";
-    cursorDot.style.top = mouseY + "px";
+    const x = e.clientX;
+    const y = e.clientY;
+    cursorDot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    cursorRing.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
     document.body.classList.remove("cursor-hidden");
   });
 
   document.addEventListener("mouseleave", () => {
     document.body.classList.add("cursor-hidden");
   });
-
-  const animateRing = () => {
-    ringX += (mouseX - ringX) * 0.45;
-    ringY += (mouseY - ringY) * 0.45;
-    cursorRing.style.left = ringX + "px";
-    cursorRing.style.top = ringY + "px";
-    requestAnimationFrame(animateRing);
-  };
-  animateRing();
 
   const hoverTargets = document.querySelectorAll(
     "a, button, .work-index-row, .bounce-card, .highlights-dot, .highlights-arrow, .hero-skill-word"
