@@ -113,104 +113,96 @@ if (header) {
   window.addEventListener("scroll", updateHeader, { passive: true });
 }
 
-// Scramble reveal for hero title - words in the same row scramble together,
-// rows run one after another
-const typeTargets = Array.from(document.querySelectorAll(".type-target"));
+// Two-plate hero. Both words are fitted to the same measure, so the
+// shorter word (Portfolio) comes out larger. At rest the plates sit apart
+// and fully legible; scrolling through the first ~half screen slides them
+// into register, overprinted on one midline.
+const heroPlates = document.getElementById("heroPlates");
 
-if (typeTargets.length) {
-  typeTargets.forEach((el) => {
-    const initial = (el.dataset.text || el.textContent || "").toUpperCase();
-    el.dataset.text = initial;
-    el.textContent = initial;
-  });
-
+if (heroPlates) {
+  const plateK = document.getElementById("plateK");
+  const plateR = document.getElementById("plateR");
+  const regMarkR = document.getElementById("regMarkR");
+  const regValue = document.getElementById("regValue");
   const heroTagline = document.querySelector(".hero-tagline");
-  const finishHero = () => {
-    if (heroTagline) heroTagline.classList.add("is-in");
-  };
-  // safety net: the tagline must never depend on the effect completing
-  window.setTimeout(finishHero, 3000);
+  const fitWords = Array.from(heroPlates.querySelectorAll("[data-fit]"));
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const GAP = 10;
+  const MAX_MM = 6;
+  let geo = null;
 
-  const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const prefersReducedMotionType = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  const rows = [];
-  typeTargets.forEach((el) => {
-    const rowEl = el.closest(".hero-row") || el.parentElement;
-    let group = rows.find((r) => r.rowEl === rowEl);
-    if (!group) {
-      group = { rowEl, els: [] };
-      rows.push(group);
-    }
-    group.els.push(el);
-  });
-
-  const scrambleWord = (el, onDone) => {
-    const text = el.dataset.text || "";
-
-    if (prefersReducedMotionType) {
-      el.textContent = text;
-      onDone();
-      return;
-    }
-
-    let revealed = 0;
-    let frame = 0;
-
-    const step = () => {
-      frame += 1;
-      if (frame % 2 === 0 && revealed < text.length) revealed += 1;
-
-      let out = "";
-      for (let i = 0; i < text.length; i += 1) {
-        if (i < revealed || text[i] === " ") {
-          out += text[i];
-        } else {
-          out += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-        }
-      }
-      el.textContent = out;
-
-      if (revealed >= text.length) {
-        el.textContent = text;
-        onDone();
-      } else {
-        setTimeout(step, 40);
-      }
-    };
-
-    step();
-  };
-
-  const runRow = (rowIndex) => {
-    if (rowIndex >= rows.length) {
-      finishHero();
-      return;
-    }
-    const group = rows[rowIndex];
-    let remaining = group.els.length;
-
-    group.els.forEach((el) => {
-      scrambleWord(el, () => {
-        remaining -= 1;
-        if (remaining === 0) {
-          setTimeout(() => runRow(rowIndex + 1), 200);
-        }
-      });
+  const fit = () => {
+    const target = heroPlates.getBoundingClientRect().width;
+    if (!target) return;
+    fitWords.forEach((el) => {
+      el.style.display = "inline-block";
+      el.style.fontSize = "100px";
+      const w = el.getBoundingClientRect().width;
+      el.style.display = "";
+      if (w) el.style.fontSize = `${((100 * target) / w).toFixed(2)}px`;
     });
   };
 
-  // Start after the hero-name CSS animation has settled
-  if (prefersReducedMotionType) {
-    finishHero();
-  } else {
-    window.setTimeout(() => {
-      typeTargets.forEach((el) => { el.textContent = ""; });
-      runRow(0);
-    }, 400);
+  const measure = () => {
+    const hR = plateR.offsetHeight;
+    const hK = plateK.offsetHeight;
+    const H = hR + GAP + hK;
+    // Fix the height before reading the position: the hero centres its
+    // content, so the heading moves while its height is unset.
+    heroPlates.style.height = `${Math.round(H)}px`;
+    // Finish registering when the lockup's centre reaches the top third of
+    // the window, so the moment the plates lock is always on screen.
+    const docTop = heroPlates.getBoundingClientRect().top + window.scrollY;
+    const span = Math.max(100, docTop + H / 2 - window.innerHeight * 0.33);
+    geo = { H, span, restR: 0, restK: hR + GAP, regR: (H - hR) / 2, regK: (H - hK) / 2 };
+  };
+
+  const progress = () => {
+    if (reduceMotion.matches) return 0;
+    return Math.min(1, Math.max(0, window.scrollY / geo.span));
+  };
+
+  const apply = () => {
+    if (!geo) return;
+    const p = progress();
+    const yR = geo.restR + (geo.regR - geo.restR) * p;
+    const yK = geo.restK + (geo.regK - geo.restK) * p;
+    plateR.style.transform = `translateY(${yR.toFixed(1)}px)`;
+    plateK.style.transform = `translateY(${yK.toFixed(1)}px)`;
+    if (regValue) regValue.textContent = `${(MAX_MM * (1 - p)).toFixed(1)} mm`;
+    if (regMarkR) {
+      const off = (14 * (1 - p)).toFixed(1);
+      regMarkR.style.transform = `translate(${off}px, ${off}px)`;
+    }
+  };
+
+  const layout = () => {
+    heroPlates.classList.remove("is-fitted");
+    heroPlates.style.height = "";
+    fit();
+    heroPlates.classList.add("is-fitted");
+    measure();
+    apply();
+  };
+
+  // scroll already fires at most once per frame, and apply() only writes
+  // two transforms, so no rAF throttle is needed
+  window.addEventListener("scroll", apply, { passive: true });
+
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(layout, 100);
+  });
+
+  layout();
+  // fonts.ready can resolve before the display face is even requested,
+  // so wait on it by name, then once more when everything has loaded.
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('700 100px "Big Shoulders Display"').then(layout, () => {});
   }
+  window.addEventListener("load", layout);
+  if (heroTagline) window.setTimeout(() => heroTagline.classList.add("is-in"), 500);
 }
 
 // Highlights slider

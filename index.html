@@ -55,17 +55,23 @@
         <span class="hero-label hero-label--right" aria-hidden="true">Available for Work</span>
         <div class="container hero-inner">
           <div class="hero-copy">
-            <h1 class="hero-name">
-              <span class="hero-row hero-row--label">
-                <span class="hero-word hero-word-left type-target" data-text="MY">MY</span>
-                <span class="hero-word hero-word-right type-target" data-text="PORTFOLIO">PORTFOLIO</span>
-              </span>
-              <span class="hero-row">
-                <span class="hero-word hero-word-left type-target" data-text="SHAYA">SHAYA</span>
-                <span class="hero-word hero-word-right type-target" data-text="KLEINMAN">KLEINMAN</span>
-              </span>
+            <!-- Two ink plates, both words justified to the same measure.
+                 Scrolling brings them into register (see script.js). -->
+            <div class="plate-key" aria-hidden="true">
+              <span><i class="plate-swatch plate-swatch--k"></i>Plate 1 &mdash; Shaya Kleinman</span>
+              <span><i class="plate-swatch plate-swatch--r"></i>Plate 2 &mdash; Portfolio</span>
+            </div>
+            <h1 class="hero-name hero-plates" id="heroPlates">
+              <span class="visually-hidden">Shaya Kleinman &mdash; Portfolio</span>
+              <span class="reg-mark reg-mark--k" aria-hidden="true"></span>
+              <span class="reg-mark reg-mark--r" id="regMarkR" aria-hidden="true"></span>
+              <span class="plate plate--r" id="plateR" aria-hidden="true"><span class="plate-word plate-word--r" data-fit>Portfolio</span></span>
+              <span class="plate plate--k" id="plateK" aria-hidden="true"><span class="plate-word plate-word--k" data-fit>Shaya Kleinman</span></span>
             </h1>
-            <p class="hero-tagline">Identity, print &amp; type</p>
+            <div class="hero-foot">
+              <p class="hero-tagline">Identity, print &amp; type</p>
+              <p class="hero-reg" aria-hidden="true">Registration <b id="regValue">6.0 mm</b></p>
+            </div>
           </div>
         </div>
         <div class="hero-skills" id="heroSkills">

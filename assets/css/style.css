@@ -353,9 +353,14 @@ ul {
   align-items: center;
   justify-content: center;
   gap: clamp(2.5rem, 8vh, 5rem);
-  padding-top: 3rem;
-  padding-bottom: 3rem;
   overflow: hidden;
+}
+
+/* .hero.section so the generic .section padding can't override it */
+.hero.section {
+  padding-top: 3rem;
+  /* clears the corner labels pinned 2.5rem from the bottom */
+  padding-bottom: 6rem;
 }
 
 .hero-inner {
@@ -441,6 +446,179 @@ ul {
   .js .hero-tagline {
     transition: none;
   }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- Two-plate hero ----------------------------------------------------
+   Black plate: the name. Red plate: Portfolio. Both are set to the same
+   measure, so Portfolio comes out larger only because it has fewer
+   letters. The page opens with the plates apart and scrolling pulls them
+   into register. Sizes and offsets are set by script.js; the values here
+   are the no-JS fallback, where the plates simply stack. */
+.plate-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: clamp(1.25rem, 3vh, 2rem);
+}
+
+.plate-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.plate-swatch {
+  display: block;
+  width: 9px;
+  height: 9px;
+}
+
+.plate-swatch--k { background: var(--text); }
+.plate-swatch--r { background: var(--accent); }
+
+.hero-plates {
+  position: relative;
+  line-height: 1;
+}
+
+/* Fade only: a slide would shift the plates while script.js measures them,
+   and the scroll registration is the entrance anyway. */
+.js .hero-plates {
+  animation: hero-label-fade-full 600ms ease-out both;
+}
+
+@keyframes hero-label-fade-full {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.plate {
+  display: block;
+  will-change: transform;
+}
+
+.plate-word {
+  display: block;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.84;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  mix-blend-mode: multiply;
+}
+
+.plate-word--k {
+  color: var(--text);
+  font-size: clamp(2rem, 8.4vw, 7.5rem);
+}
+
+.plate-word--r {
+  color: var(--accent);
+  font-size: clamp(3rem, 13.6vw, 12.25rem);
+}
+
+.js .hero-plates.is-fitted .plate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Registration marks: the red one drifts off the black one and settles
+   back as the plates come into register. */
+.reg-mark {
+  position: absolute;
+  left: -34px;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  display: none;
+}
+
+.reg-mark::before,
+.reg-mark::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+
+.reg-mark::before { left: 0; right: 0; top: 50%; height: 1px; }
+.reg-mark::after { top: 0; bottom: 0; left: 50%; width: 1px; }
+
+.reg-mark--k {
+  color: var(--text);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px currentColor;
+  opacity: 0.55;
+}
+
+.reg-mark--r {
+  color: var(--accent);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px currentColor;
+  opacity: 0.75;
+}
+
+@media (min-width: 1100px) {
+  .js .hero-plates.is-fitted .reg-mark {
+    display: block;
+  }
+}
+
+.hero-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: clamp(1.5rem, 4vh, 2.5rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.hero-foot .hero-tagline {
+  margin-top: 0;
+}
+
+.hero-reg {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: right;
+}
+
+.hero-reg b {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+html:not(.js) .hero-reg {
+  display: none;
 }
 
 .hero-scroll-hint {
@@ -2607,6 +2785,21 @@ ul {
   }
 }
 
+/* Phones: the lockup is only ~160px tall, so centring it in 88% of the
+   screen left a band of dead space under the nav. Start it at the top. */
+@media (max-width: 640px) {
+  .hero {
+    min-height: 0;
+    justify-content: flex-start;
+    gap: 2.5rem;
+  }
+
+  .hero.section {
+    padding-top: 2rem;
+    padding-bottom: 4.5rem;
+  }
+}
+
 /* ---- Other Work: linocut print grid ---- */
 .print-media {
   display: grid;
@@ -2770,6 +2963,25 @@ ul {
 
   .hero-name {
     font-size: 48pt !important;
+  }
+
+  /* Plates print stacked and legible, never mid-registration */
+  .hero-plates {
+    height: auto !important;
+  }
+
+  .hero-plates .plate {
+    position: static !important;
+    transform: none !important;
+  }
+
+  .plate-word--k { font-size: 40pt !important; }
+  .plate-word--r { font-size: 64pt !important; }
+
+  .reg-mark,
+  .hero-reg,
+  .plate-key {
+    display: none !important;
   }
 
   .container,
