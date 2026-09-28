@@ -2810,9 +2810,10 @@ html:not(.js) .hero-reg {
 /* Phones: the lockup is only ~160px tall, so centring it in 88% of the
    screen left a band of dead space under the nav. Start it at the top. */
 @media (max-width: 640px) {
+  /* the hero fills the first screen; Selected work starts below it */
   .hero {
-    min-height: 0;
-    justify-content: flex-start;
+    min-height: calc(100svh - var(--header-h));
+    justify-content: center;
     gap: 2.5rem;
   }
 
