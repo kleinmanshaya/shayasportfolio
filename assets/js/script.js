@@ -590,7 +590,7 @@ if (galleryData.length > 0) {
 }
 
 // Image loading placeholders
-document.querySelectorAll(".media-block, .highlight-item, .work-index-thumb").forEach((el) => {
+document.querySelectorAll(".media-block, .highlight-item").forEach((el) => {
   const img = el.querySelector("img");
   if (!img) return;
   const done = () => el.classList.add("is-loaded");
@@ -689,143 +689,86 @@ if (heroSkills) {
   });
 }
 
-// Work index row hover
-const workIndexRows = document.querySelectorAll(".work-index-row");
+// Selected work: living index. Hover or focus a row to make it active -
+// its title runs up the weight axis and the side plate swaps to its
+// image. Filters collapse the rows that don't match.
+const idxList = document.getElementById("idxList");
 
-workIndexRows.forEach((row) => {
-  row.addEventListener("mouseenter", () => {
-    row.classList.add("is-hovering");
-  });
-  row.addEventListener("mouseleave", () => {
-    row.classList.remove("is-hovering");
-  });
-});
+if (idxList) {
+  const rows = Array.from(idxList.querySelectorAll(".idx-row"));
+  const plateImgs = Array.from(document.querySelectorAll("#idxPlate img"));
+  const spec = document.getElementById("idxSpec");
+  const SPECS = [
+    ["Norish", "Menu system \u00b7 Hebrew & Latin \u00b7 2026"],
+    ["Kis Library", "Pocket book series \u00b7 Cover system \u00b7 2025"],
+    ["Museum of Typography", "Identity system \u00b7 Type as exhibition language \u00b7 2025"],
+    ["Sound of Concrete", "Poster campaign \u00b7 Three posters \u00b7 2025"],
+    ["Dichotomy", "Zine \u00b7 Illustration \u00b7 2026"],
+    ["Linocut", "Relief prints \u00b7 Seven editions"],
+  ];
 
-// Work index cursor-following preview image
-const workIndex = document.getElementById("workIndex");
-const workPreview = document.getElementById("workPreview");
-const workPreviewImg = document.getElementById("workPreviewImg");
-
-if (
-  workIndex &&
-  workPreview &&
-  workPreviewImg &&
-  workIndexRows.length &&
-  window.matchMedia("(hover: hover)").matches
-) {
-  let targetX = 0;
-  let targetY = 0;
-  let currentX = 0;
-  let currentY = 0;
-  let scale = 0.88;
-  let targetScale = 0.88;
-  let rotation = 0;
-  let active = false;
-  let hasPosition = false;
-
-  const loop = () => {
-    currentX += (targetX - currentX) * 0.16;
-    currentY += (targetY - currentY) * 0.16;
-    scale += (targetScale - scale) * 0.16;
-    workPreview.style.transform =
-      `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%) ` +
-      `rotate(${rotation}deg) scale(${scale})`;
-    requestAnimationFrame(loop);
-  };
-  requestAnimationFrame(loop);
-
-  workIndex.addEventListener("mousemove", (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
-    if (!hasPosition) {
-      currentX = targetX;
-      currentY = targetY;
-      hasPosition = true;
+  const show = (i) => {
+    rows.forEach((r) => r.classList.toggle("is-on", Number(r.dataset.i) === i));
+    plateImgs.forEach((img, k) => img.classList.toggle("is-on", k === i));
+    if (spec && SPECS[i]) {
+      spec.querySelector("b").textContent = SPECS[i][0];
+      spec.querySelector("i").textContent = SPECS[i][1];
     }
+  };
+
+  rows.forEach((row) => {
+    const i = Number(row.dataset.i);
+    row.addEventListener("pointerenter", () => show(i));
+    row.addEventListener("focus", () => show(i));
   });
 
-  workIndexRows.forEach((row) => {
-    const img = row.querySelector(".work-index-thumb-img");
-    row.addEventListener("mouseenter", () => {
-      if (img) {
-        workPreviewImg.src = img.currentSrc || img.src;
-        workPreviewImg.alt = img.alt || "";
-      }
-      rotation = active ? rotation : (Math.random() * 5 - 2.5).toFixed(2);
-      active = true;
-      targetScale = 1;
-      workPreview.classList.add("is-visible");
+  const facets = document.getElementById("facets");
+  const count = document.getElementById("facetCount");
+  if (facets) {
+    const buttons = Array.from(facets.querySelectorAll(".facet"));
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        buttons.forEach((b) => {
+          b.classList.toggle("is-on", b === btn);
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        const f = btn.dataset.f;
+        const shown = [];
+        rows.forEach((row) => {
+          const item = row.closest(".idx-item");
+          const hit = f === "all" || (item.dataset.tags || "").split(" ").includes(f);
+          item.classList.toggle("is-hidden", !hit);
+          row.tabIndex = hit ? 0 : -1;
+          if (hit) shown.push(row);
+        });
+        if (count) count.textContent = `${shown.length} of ${rows.length}`;
+        if (shown.length) show(Number(shown[0].dataset.i));
+      });
     });
-    row.addEventListener("mouseleave", () => {
-      active = false;
-      targetScale = 0.88;
-      workPreview.classList.remove("is-visible");
-    });
-  });
+  }
 }
 
-// Project hero title: scramble-decode reveal, per line (preserves <br> stacking)
+// Project hero title: each line rises into place in turn. (This used to
+// scramble random letters in red, which read as a rendering glitch.)
 document.querySelectorAll(".project-hero-title-text").forEach((el) => {
   const lines = el.innerHTML.split(/<br\s*\/?>/i).map((line) => line.trim());
   const hero = el.closest(".project-hero");
-  const reducedMotionTitle = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-  const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const START_DELAY = 480;
-  const LINE_STAGGER = 140;
-  const FRAME_MS = 40;
+  const START_DELAY = 200;
+  const LINE_STAGGER = 110;
+  const RISE_MS = 700;
 
   el.innerHTML = "";
-  let tailMs = 0;
-
   lines.forEach((text, lineIndex) => {
     const span = document.createElement("span");
-    span.className = "scramble-line";
+    span.className = "title-line";
+    span.innerHTML = text;
+    span.style.animationDelay = `${START_DELAY + lineIndex * LINE_STAGGER}ms`;
     el.appendChild(span);
     if (lineIndex < lines.length - 1) el.appendChild(document.createElement("br"));
-
-    const delay = START_DELAY + lineIndex * LINE_STAGGER;
-    const estDuration = Math.ceil(text.length / 2) * FRAME_MS + FRAME_MS;
-    tailMs = Math.max(tailMs, delay + estDuration);
-
-    if (reducedMotionTitle) {
-      span.textContent = text;
-      span.classList.add("is-resolved");
-      return;
-    }
-
-    setTimeout(() => {
-      let revealed = 0;
-      let frame = 0;
-
-      const step = () => {
-        frame += 1;
-        if (frame % 2 === 0 && revealed < text.length) revealed += 1;
-
-        let out = "";
-        for (let i = 0; i < text.length; i += 1) {
-          if (i < revealed || text[i] === " ") {
-            out += text[i];
-          } else {
-            out += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-          }
-        }
-        span.textContent = out;
-
-        if (revealed >= text.length) {
-          span.textContent = text;
-          span.classList.add("is-resolved");
-        } else {
-          setTimeout(step, FRAME_MS);
-        }
-      };
-
-      step();
-    }, delay);
   });
 
-  if (hero) hero.style.setProperty("--reveal-tail", `${tailMs}ms`);
+  const tailMs = START_DELAY + (lines.length - 1) * LINE_STAGGER + RISE_MS * 0.6;
+  if (hero) hero.style.setProperty("--reveal-tail", `${Math.round(tailMs)}ms`);
 });
 
 const cursorDot = document.getElementById("cursorDot");
@@ -845,7 +788,7 @@ if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
   });
 
   const hoverTargets = document.querySelectorAll(
-    "a, button, .work-index-row, .bounce-card, .highlights-dot, .highlights-arrow, .hero-skill-word"
+    "a, button, .bounce-card, .highlights-dot, .highlights-arrow, .hero-skill-word"
   );
 
   hoverTargets.forEach((el) => {

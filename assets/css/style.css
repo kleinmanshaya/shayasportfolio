@@ -1094,256 +1094,281 @@ html:not(.js) .hero-reg {
   text-align: var(--section-align);
 }
 
-/* ---- Work index list ---- */
-.work-index {
+/* ---- Selected work: living index ------------------------------------
+   Titles sit light and quiet until touched, then run up Big Shoulders'
+   weight axis. Desktop: one plate beside the list, spanning it top to
+   bottom, shows the active project. Phones: each row carries its own
+   image at its true proportions - nothing cropped. */
+.facets {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.work-index-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 200px;
-  align-items: stretch;
-  min-height: 152px;
-  border-top: 1px solid var(--border);
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  border-radius: 0;
-  transition: background-color 300ms ease;
-}
-
-.work-index-row:last-child {
-  border-bottom: 1px solid var(--border);
-}
-
-.work-index-row::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--accent);
-  transform: scaleY(0);
-  transition: transform 350ms ease;
-}
-
-.work-index-row:hover,
-.work-index-row.is-hovering {
-  background-color: var(--surface);
-}
-
-.work-index-row:hover::before,
-.work-index-row.is-hovering::before {
-  transform: scaleY(1);
-}
-
-
-
-.work-index-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 1.25rem 0 0;
-  z-index: 2;
-}
-
-.work-index-num {
-  font-size: 0.5em;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--muted);
-  vertical-align: super;
-  margin-left: 0.25em;
-  opacity: 1;
-  transition: color 300ms ease, -webkit-text-stroke-color 300ms ease;
-}
-
-/* Outlined numerals only where the stroke is supported, so the index still
-   numbers itself in browsers that do not do text-stroke. */
-@supports (-webkit-text-stroke: 1px currentColor) {
-  .work-index-num {
-    color: transparent;
-    -webkit-text-stroke: 1.4px var(--muted);
-  }
-}
-
-.work-index-row:hover .work-index-num,
-.work-index-row.is-hovering .work-index-num {
-  color: var(--accent);
-  -webkit-text-stroke-color: var(--accent);
-}
-
-.work-index-title {
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.01em;
-  margin-top: 0.15rem;
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
-  transition: transform 300ms ease;
-}
-
-.work-index-row--featured .work-index-title {
-  font-size: var(--t-title);
-}
-
-.work-index-row:hover .work-index-title,
-.work-index-row.is-hovering .work-index-title {
-  transform: translateX(6px);
-}
-
-.work-index-tag {
+.facet {
+  font-family: "Poppins", sans-serif;
   font-size: var(--t-label);
-  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  line-height: 1;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.facet:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.facet.is-on {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.facet-count {
+  margin-left: auto;
+  font-size: var(--t-label);
+  font-weight: 600;
   letter-spacing: var(--track-label);
-  margin-top: 0.3rem;
-  transition: transform 300ms ease;
-}
-
-.work-index-row:hover .work-index-tag,
-.work-index-row.is-hovering .work-index-tag {
-  transform: translateX(6px);
-}
-
-.work-index-arrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 1rem;
-  opacity: 0.5;
-  transform: translateX(0);
-  transition: opacity 300ms ease, transform 300ms ease;
+  font-variant-numeric: tabular-nums;
 }
 
-.work-index-row:hover .work-index-arrow,
-.work-index-row.is-hovering .work-index-arrow {
-  opacity: 1;
-  transform: translateX(6px);
+.idx {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 34vw, 470px);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: stretch;
 }
 
-.work-index-thumb {
+.idx-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--text);
+}
+
+.idx-item {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 340ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 280ms ease;
+}
+
+.idx-item > .idx-row {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.idx-item.is-hidden {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.idx-item.is-hidden > .idx-row {
+  border-bottom-color: transparent;
+}
+
+.idx-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--transition-fast);
+}
+
+.idx-title {
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: var(--t-title);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) 38%, transparent);
+  white-space: nowrap;
+  transition: font-weight 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    letter-spacing 420ms cubic-bezier(0.2, 0.8, 0.2, 1), color 240ms ease;
+}
+
+.idx-meta {
+  margin-left: auto;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  text-align: right;
+  transition: color var(--transition-fast);
+}
+
+.idx-row.is-on .idx-title {
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.idx-row.is-on .idx-meta {
+  color: var(--accent);
+}
+
+.idx-row.is-on {
+  border-bottom-color: var(--text);
+}
+
+.idx-row:focus-visible {
+  outline-offset: -3px;
+}
+
+.idx-rowfig {
+  display: none;
+}
+
+/* The plate spans the list: top on the first rule, bottom on the last. */
+.idx-plate {
   position: relative;
   overflow: hidden;
-  margin: 16px 0;
-  align-self: center;
-}
-
-.work-index-row--featured .work-index-thumb {
-  margin: 20px 0;
-}
-
-/* the featured row breaks the beat with a bigger image, not a taller box */
-.work-index .work-index-row--featured {
-  grid-template-columns: 1fr clamp(140px, 24vw, 320px);
-}
-
-.work-index-thumb-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: center;
-  filter: grayscale(85%) contrast(1.03);
-  transform: scale(1);
-  transition: transform 550ms ease, filter 450ms ease, opacity 400ms ease;
-}
-
-.work-index-row--featured .work-index-thumb-img {
-  filter: none;
-}
-
-.work-index-row:hover .work-index-thumb-img,
-.work-index-row.is-hovering .work-index-thumb-img {
-  filter: grayscale(0%);
-  transform: scale(1.06);
-}
-
-/* ---- Cursor-following preview (desktop / mouse only) ---- */
-.work-preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 320px;
-  height: 220px;
-  pointer-events: none;
-  z-index: 60;
-  overflow: hidden;
-  opacity: 0;
-  border: 1px solid var(--border);
+  min-height: 260px;
   background: var(--surface);
-  box-shadow: var(--shadow-soft);
-  transition: opacity 280ms ease;
-  will-change: transform, opacity;
+  border: 1px solid var(--border);
 }
 
-.work-preview.is-visible {
-  opacity: 1;
-}
-
-.work-preview img {
-  display: block;
+.idx-plate img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 340ms ease;
 }
 
-@media (hover: none) {
-  .work-preview {
+.idx-plate img.is-on {
+  opacity: 1;
+}
+
+.idx-spec {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 2.5rem 1rem 0.9rem;
+  background: linear-gradient(transparent, rgba(8, 9, 10, 0.82));
+  color: #fff;
+}
+
+.idx-spec b {
+  display: block;
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.idx-spec i {
+  display: block;
+  margin-top: 0.4rem;
+  font-style: normal;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Tablet and phone: no side plate; every row shows its own image in full
+   and the title reads at full strength, since there is no hover. */
+@media (max-width: 900px) {
+  .idx {
+    grid-template-columns: 1fr;
+  }
+
+  .idx-plate {
+    display: none;
+  }
+
+  .idx-list {
+    border-top: 0;
+  }
+
+  .idx-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding: 0 0 1.75rem;
+    margin-bottom: 1.75rem;
+  }
+
+  /* the section's own border follows, so the last row needs no rule */
+  .idx-item:last-child .idx-row {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .idx-rowfig {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.9rem;
+    background: var(--surface);
+  }
+
+  .idx-title,
+  .idx-row.is-on .idx-title {
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--text);
+    white-space: normal;
+  }
+
+  .idx-meta,
+  .idx-row.is-on .idx-meta {
+    margin-left: 0;
+    text-align: left;
+    white-space: normal;
+    color: var(--muted);
+  }
+
+  .idx-row.is-on {
+    border-bottom-color: var(--border);
+  }
+
+  .facet-count {
     display: none;
   }
 }
 
-@media (max-width: 768px) {
-  .work-index-row {
-    grid-template-columns: 1fr 110px;
-    min-height: 112px;
-  }
-
-  .work-index-row--featured {
-    min-height: 144px;
-  }
-
-  .work-index-thumb {
-    margin: 12px 0;
-  }
-
-  .work-index-content {
-    padding-right: 1rem;
-  }
-
-  .work-index-arrow {
-    margin-top: 0.5rem;
-  }
-}
-
-/* below 560 the two-column row squeezes titles to three lines - stack instead */
+/* Phones: a tall portrait (the linocut) shouldn't take a whole screen. */
 @media (max-width: 640px) {
-  .work-index-row,
-  .work-index .work-index-row--featured {
-    grid-template-columns: 1fr;
-    min-height: 0;
-    padding: 1.25rem 0;
+  .idx-rowfig {
+    max-height: 70vh;
+    width: auto;
+    max-width: 100%;
   }
 
-  .work-index-content {
-    padding: 0;
-    order: 2;
+  .facets {
+    gap: 0.4rem;
   }
 
-  .work-index-thumb {
-    order: 1;
-    margin: 0 0 0.9rem;
-  }
-
-  .work-index-thumb-img {
-    aspect-ratio: 16 / 9;
+  .facet {
+    padding: 0.55rem 0.7rem;
   }
 }
 
@@ -1621,14 +1646,14 @@ html:not(.js) .hero-reg {
   margin: 0;
 }
 
-.project-hero-title-text .scramble-line {
+.project-hero-title-text .title-line {
   display: inline-block;
-  color: var(--accent);
-  transition: color 300ms ease;
+  animation: title-rise 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.project-hero-title-text .scramble-line.is-resolved {
-  color: var(--text);
+@keyframes title-rise {
+  from { opacity: 0; transform: translateY(0.18em); }
+  to   { opacity: 1; transform: none; }
 }
 
 .project-hero-bottom .project-hero-rule {
@@ -1661,9 +1686,8 @@ html:not(.js) .hero-reg {
     filter: none;
   }
 
-  .project-hero-title-text .scramble-line {
-    color: var(--text);
-    transition: none;
+  .project-hero-title-text .title-line {
+    animation: none;
   }
 }
 
@@ -1757,7 +1781,6 @@ html:not(.js) .hero-reg {
 .project-intro-note {
   font-size: var(--t-label);
   color: var(--muted);
-  opacity: 0.25;
   margin-top: 1.5rem;
 }
 
@@ -2165,7 +2188,6 @@ html:not(.js) .hero-reg {
 .project-page--norish .project-intro-note {
   font-size: 0.8rem;
   line-height: 1.45;
-  opacity: 0.55;
   margin: 0.75rem 0 0;
 }
 
@@ -2798,6 +2820,45 @@ html:not(.js) .hero-reg {
     padding-top: 2rem;
     padding-bottom: 4.5rem;
   }
+
+  /* space-between on a wrapping row left "Book Design" stranded on its
+     own line; two even columns read as a list instead */
+  .hero-skills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 1rem;
+  }
+
+  .work-intro {
+    font-size: var(--t-body);
+    margin-bottom: 1.75rem;
+  }
+
+  /* one section rhythm on phones: every break is the same 2 x --section-y */
+  .principles-section {
+    padding: var(--section-y) 0;
+  }
+}
+
+/* Phones: the project header held a full screen (title top, description
+   bottom) which left ~450px of nothing between them. Size it to content. */
+@media (max-width: 640px) {
+  .project-hero {
+    padding-bottom: 0;
+  }
+
+  .project-hero .container {
+    min-height: 0;
+    justify-content: flex-start;
+    gap: 2rem;
+    padding-top: 0.75rem;
+    padding-bottom: 2rem;
+  }
+
+  .project-intro {
+    padding-top: 2.25rem;
+    padding-bottom: 2.5rem;
+  }
 }
 
 /* ---- Other Work: linocut print grid ---- */
@@ -2925,6 +2986,8 @@ html:not(.js) .hero-reg {
   .cursor-dot,
   .cursor-ring,
   .work-preview,
+  .facets,
+  .idx-plate,
   .menu-toggle,
   .highlights-arrow,
   .highlights-dots,
@@ -2994,18 +3057,29 @@ html:not(.js) .hero-reg {
   h1,
   h2,
   h3,
-  .work-index-title,
+  .idx-title,
   .project-hero-title {
     break-after: avoid;
   }
 
-  .work-index-row {
+  .idx-row {
     break-inside: avoid;
-    min-height: 0 !important;
   }
 
-  .work-index-arrow {
-    display: none !important;
+  /* print the list at full strength with its images, not the hover state */
+  .idx {
+    display: block !important;
+  }
+
+  .idx-rowfig {
+    display: block !important;
+    max-width: 60% !important;
+    margin-bottom: 0.3cm;
+  }
+
+  .idx-title {
+    font-weight: 700 !important;
+    color: #000 !important;
   }
 
   img {

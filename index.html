@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@200..800&family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/style.css?v=20260928" />
@@ -91,65 +91,75 @@
         <div class="container">
           <h2 class="work-heading reveal">Selected work</h2>
           <p class="work-intro reveal">Identity, editorial, and print work, picked from recent projects.</p>
-          <div class="work-index" id="workIndex">
-            <a href="museum-of-typography.html" class="work-index-row work-index-row--featured card-reveal">
-              <div class="work-index-content">
-                <span class="work-index-title">Museum of Typography <sup class="work-index-num">01</sup></span>
-                <span class="work-index-tag">Branding</span>
-                <span class="work-index-arrow">View project →</span>
-              </div>
-              <div class="work-index-thumb">
-                <img src="images/thumbs/mot-sign-mockup-thumb.jpg" alt="Museum of Typography" class="work-index-thumb-img" width="800" height="600" decoding="async">
-              </div>
-            </a>
-
-            <a href="kis-library.html" class="work-index-row card-reveal">
-              <div class="work-index-content">
-                <span class="work-index-title">Kis Library <sup class="work-index-num">02</sup></span>
-                <span class="work-index-tag">Branding &amp; book cover design</span>
-                <span class="work-index-arrow">View project →</span>
-              </div>
-              <div class="work-index-thumb">
-                <img src="images/kis-library/kis-library-cover.png" alt="Kis Library" class="work-index-thumb-img" width="1024" height="768" decoding="async">
-              </div>
-            </a>
-
-            <a href="norish.html" class="work-index-row card-reveal">
-              <div class="work-index-content">
-                <span class="work-index-title">Norish <sup class="work-index-num">03</sup></span>
-                <span class="work-index-tag">Menu design</span>
-                <span class="work-index-arrow">View project →</span>
-              </div>
-              <div class="work-index-thumb">
-                <img src="images/thumbs/both%20drinks%20overlap-thumb.jpg" alt="Norish" class="work-index-thumb-img" width="800" height="600" decoding="async">
-              </div>
-            </a>
-
-            <a href="sound-of-concrete.html" class="work-index-row card-reveal">
-              <div class="work-index-content">
-                <span class="work-index-title">Sound of Concrete <sup class="work-index-num">04</sup></span>
-                <span class="work-index-tag">Poster design</span>
-                <span class="work-index-arrow">View project →</span>
-              </div>
-              <div class="work-index-thumb">
-                <img src="images/thumbs/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93-thumb.jpg" alt="Sound of Concrete" class="work-index-thumb-img" width="800" height="533" decoding="async">
-              </div>
-            </a>
-
-            <a href="dichotomy.html" class="work-index-row card-reveal">
-              <div class="work-index-content">
-                <span class="work-index-title">Dichotomy <sup class="work-index-num">05</sup></span>
-                <span class="work-index-tag">Zine &amp; illustration</span>
-                <span class="work-index-arrow">View project →</span>
-              </div>
-              <div class="work-index-thumb">
-                <img src="images/dichotomy/mockup-cover.jpg" alt="Dichotomy" class="work-index-thumb-img" width="1105" height="1332" decoding="async">
-              </div>
-            </a>
+          <div class="facets" id="facets" role="group" aria-label="Filter projects">
+            <button class="facet is-on" type="button" data-f="all" aria-pressed="true">All</button>
+            <button class="facet" type="button" data-f="identity" aria-pressed="false">Identity</button>
+            <button class="facet" type="button" data-f="editorial" aria-pressed="false">Editorial</button>
+            <button class="facet" type="button" data-f="bilingual" aria-pressed="false">Bilingual</button>
+            <button class="facet" type="button" data-f="print" aria-pressed="false">Print</button>
+            <button class="facet" type="button" data-f="handmade" aria-pressed="false">Handmade</button>
+            <span class="facet-count" id="facetCount" aria-live="polite">6 of 6</span>
           </div>
-        </div>
-        <div class="work-preview" id="workPreview" aria-hidden="true">
-          <img id="workPreviewImg" src="" alt="">
+
+          <!-- Living index: titles sit light until touched, then run up the
+               weight axis. On desktop one plate beside the list shows the
+               active project; on phones each row carries its own image. -->
+          <div class="idx">
+            <ol class="idx-list" id="idxList">
+              <li class="idx-item" data-tags="editorial bilingual print">
+                <a class="idx-row is-on" href="norish.html" data-i="0">
+                  <img class="idx-rowfig" src="images/thumbs/both%20drinks%20overlap-thumb.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+                  <span class="idx-title">Norish</span>
+                  <span class="idx-meta">Menu system &middot; Hebrew &amp; Latin &middot; Client</span>
+                </a>
+              </li>
+              <li class="idx-item" data-tags="identity editorial print">
+                <a class="idx-row" href="kis-library.html" data-i="1">
+                  <img class="idx-rowfig" src="images/kis-library/kis-library-cover.png" alt="" width="1024" height="768" loading="lazy" decoding="async">
+                  <span class="idx-title">Kis Library</span>
+                  <span class="idx-meta">Book covers &middot; Identity &middot; Academic</span>
+                </a>
+              </li>
+              <li class="idx-item" data-tags="identity print">
+                <a class="idx-row" href="museum-of-typography.html" data-i="2">
+                  <img class="idx-rowfig" src="images/thumbs/mot-sign-mockup-thumb.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+                  <span class="idx-title">Museum of Typography</span>
+                  <span class="idx-meta">Identity system &middot; Academic</span>
+                </a>
+              </li>
+              <li class="idx-item" data-tags="print">
+                <a class="idx-row" href="sound-of-concrete.html" data-i="3">
+                  <img class="idx-rowfig" src="images/thumbs/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93-thumb.jpg" alt="" width="800" height="533" loading="lazy" decoding="async">
+                  <span class="idx-title">Sound of Concrete</span>
+                  <span class="idx-meta">Poster campaign &middot; Self-directed</span>
+                </a>
+              </li>
+              <li class="idx-item" data-tags="editorial print">
+                <a class="idx-row" href="dichotomy.html" data-i="4">
+                  <img class="idx-rowfig" src="images/dichotomy/mockup-cover.jpg" alt="" width="1105" height="1332" loading="lazy" decoding="async">
+                  <span class="idx-title">Dichotomy</span>
+                  <span class="idx-meta">Zine &amp; illustration &middot; Self-directed</span>
+                </a>
+              </li>
+              <li class="idx-item" data-tags="print handmade">
+                <a class="idx-row" href="other-work.html" data-i="5">
+                  <img class="idx-rowfig" src="images/lino-prints/stare.jpg" alt="" width="553" height="747" loading="lazy" decoding="async">
+                  <span class="idx-title">Linocut</span>
+                  <span class="idx-meta">Relief prints &middot; Seven editions</span>
+                </a>
+              </li>
+            </ol>
+
+            <div class="idx-plate" id="idxPlate" aria-hidden="true">
+              <img class="is-on" src="images/thumbs/both%20drinks%20overlap-thumb.jpg" alt="" width="800" height="600" decoding="async">
+              <img src="images/kis-library/kis-library-cover.png" alt="" width="1024" height="768" loading="lazy" decoding="async">
+              <img src="images/thumbs/mot-sign-mockup-thumb.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+              <img src="images/thumbs/%D7%A4%D7%95%D7%A1%D7%98%D7%A8%20%D7%91%D7%95%D7%93%D7%93-thumb.jpg" alt="" width="800" height="533" loading="lazy" decoding="async">
+              <img src="images/dichotomy/mockup-cover.jpg" alt="" width="1105" height="1332" loading="lazy" decoding="async">
+              <img src="images/lino-prints/stare.jpg" alt="" width="553" height="747" loading="lazy" decoding="async">
+              <div class="idx-spec" id="idxSpec"><b>Norish</b><i>Menu system &middot; Hebrew &amp; Latin &middot; 2026</i></div>
+            </div>
+          </div>
         </div>
       </section>
 
