@@ -2167,6 +2167,32 @@ html:not(.js) .hero-reg {
   width: 100%;
 }
 
+/* Portrait video in a case study: centred at a readable size rather than
+   stretched to the full column, and never taller than the screen. */
+.media-video {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.media-video video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: min(80svh, 760px);
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  background: var(--bg-alt);
+}
+
+@media (max-width: 640px) {
+  .media-video video {
+    width: 100%;
+    height: auto;
+    max-height: 80svh;
+  }
+}
+
 /* 2-up row - explicit only */
 .media-row {
   display: grid;

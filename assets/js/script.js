@@ -796,3 +796,13 @@ if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
     el.addEventListener("mouseleave", () => cursorRing.classList.remove("is-hover"));
   });
 }
+
+// Case-study videos loop silently like a moving image. For anyone who has
+// asked for reduced motion, stop them and hand over the controls instead.
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.querySelectorAll(".media-video video").forEach((v) => {
+    v.removeAttribute("autoplay");
+    v.pause();
+    v.controls = true;
+  });
+}
