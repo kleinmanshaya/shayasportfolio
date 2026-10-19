@@ -817,8 +817,6 @@ document.querySelectorAll(".media-video").forEach((fig) => {
     btn.addEventListener("click", () => {
       video.muted = !video.muted;
       btn.setAttribute("aria-pressed", String(!video.muted));
-      const label = btn.querySelector(".media-video-sound-label");
-      if (label) label.textContent = video.muted ? "Sound off" : "Sound on";
       keepPlaying();
     });
   }

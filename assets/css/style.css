@@ -2179,7 +2179,7 @@ html:not(.js) .hero-reg {
 .media-video-frame {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 0.7rem;
   max-width: 100%;
 }
@@ -2194,33 +2194,28 @@ html:not(.js) .hero-reg {
   background: var(--bg-alt);
 }
 
-/* Sound toggle: a quiet caption under the video's right edge, in the
-   site's small tracked-label style - no box, no fill. The accent appears
-   only once sound is on. */
+/* Sound toggle: an icon in a thin ring, centred under the video - the
+   same 1.5px circle as the custom cursor. Accent only once sound is on. */
 .media-video-sound {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0;
-  border: 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
   background: none;
   color: var(--muted);
-  font-family: "Poppins", sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  line-height: 1;
   cursor: pointer;
   transition: color var(--transition-fast);
 }
 
 .media-video-sound svg {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 13px;
+  height: 13px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.2;
+  stroke-width: 1.3;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
