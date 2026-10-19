@@ -2190,43 +2190,62 @@ html:not(.js) .hero-reg {
   background: var(--bg-alt);
 }
 
-/* Sound toggle sits on the video's corner, in the site's label style */
+/* Sound toggle: a small hairline square on the video's corner - the same
+   1px border and quiet ink as the filter chips, with the accent only once
+   sound is actually on. */
 .media-video-sound {
   position: absolute;
-  right: 0.75rem;
-  bottom: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 0.8rem;
-  border: 0;
-  background: rgba(17, 24, 39, 0.78);
-  color: #fff;
-  font-family: "Poppins", sans-serif;
-  font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  line-height: 1;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid rgba(17, 24, 39, 0.14);
+  background: rgba(250, 250, 250, 0.82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--text);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
-.media-video-sound::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  border: 1.5px solid currentColor;
+.media-video-sound svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.media-video-sound[aria-pressed="true"]::before {
-  background: var(--accent);
-  border-color: var(--accent);
+.media-video-sound .spk {
+  fill: currentColor;
+  stroke: none;
+}
+
+.media-video-sound .wave {
+  display: none;
+}
+
+.media-video-sound[aria-pressed="true"] .wave {
+  display: inline;
+}
+
+.media-video-sound[aria-pressed="true"] .mute {
+  display: none;
+}
+
+.media-video-sound[aria-pressed="true"] {
+  color: var(--accent);
 }
 
 .media-video-sound:hover {
-  background: rgba(17, 24, 39, 0.92);
+  background: rgba(250, 250, 250, 0.96);
+  border-color: rgba(17, 24, 39, 0.35);
 }
 
 @media (max-width: 640px) {
