@@ -797,12 +797,27 @@ if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
   });
 }
 
-// Case-study videos loop silently like a moving image. For anyone who has
-// asked for reduced motion, stop them and hand over the controls instead.
-if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  document.querySelectorAll(".media-video video").forEach((v) => {
-    v.removeAttribute("autoplay");
-    v.pause();
-    v.controls = true;
+// Case-study videos loop silently and never stop. The button turns sound
+// on and off; play() is re-called because some browsers pause a video
+// when its muted state changes.
+document.querySelectorAll(".media-video").forEach((fig) => {
+  const video = fig.querySelector("video");
+  const btn = fig.querySelector(".media-video-sound");
+  if (!video) return;
+  video.loop = true;
+  const keepPlaying = () => {
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
+  };
+  video.addEventListener("pause", () => {
+    if (!video.ended) keepPlaying();
   });
-}
+  if (btn) {
+    btn.addEventListener("click", () => {
+      video.muted = !video.muted;
+      btn.setAttribute("aria-pressed", String(!video.muted));
+      btn.textContent = video.muted ? "Sound on" : "Sound off";
+      keepPlaying();
+    });
+  }
+});
