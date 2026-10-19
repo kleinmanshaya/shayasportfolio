@@ -2245,6 +2245,75 @@ html:not(.js) .hero-reg {
   color: var(--accent);
 }
 
+/* The ring stays centred under the video; the volume line hangs off its
+   right side and only appears once sound is on. */
+.media-video-controls {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.media-video-volume {
+  --v: 80%;
+  position: absolute;
+  left: calc(50% + 15px + 0.75rem);
+  top: 50%;
+  width: 64px;
+  height: 16px;
+  margin: 0;
+  transform: translateY(-50%);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.media-video.is-sound .media-video-volume {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* iOS ignores page-set volume, so there is nothing to control there */
+.media-video.no-volume .media-video-volume {
+  display: none;
+}
+
+.media-video-volume::-webkit-slider-runnable-track {
+  height: 1px;
+  background: linear-gradient(to right, var(--accent) var(--v), var(--border) var(--v));
+}
+
+.media-video-volume::-moz-range-track {
+  height: 1px;
+  background: var(--border);
+}
+
+.media-video-volume::-moz-range-progress {
+  height: 1px;
+  background: var(--accent);
+}
+
+.media-video-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 7px;
+  height: 7px;
+  margin-top: -3px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.media-video-volume::-moz-range-thumb {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
 @media (max-width: 640px) {
   .media-video video {
     width: 100%;

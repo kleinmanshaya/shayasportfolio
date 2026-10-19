@@ -30,8 +30,8 @@
       href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/style.css?v=20261019d" />
-    <link rel="stylesheet" href="assets/css/flipbook.css?v=20261019d" />
+    <link rel="stylesheet" href="assets/css/style.css?v=20261019e" />
+    <link rel="stylesheet" href="assets/css/flipbook.css?v=20261019e" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -114,9 +114,12 @@
       <figure class="media-video project-shell card-reveal">
         <div class="media-video-frame">
           <video src="images/dichotomy/dichotomy-video.mp4" width="720" height="1280" autoplay muted loop playsinline preload="metadata" aria-label="Flipping through the Dichotomy zine"></video>
-          <button class="media-video-sound" type="button" aria-pressed="false" aria-label="Sound">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path class="spk" d="M2.5 6h2.5l3.5-3v10l-3.5-3H2.5z"/><path class="wave" d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.8a6 6 0 0 1 0 8.4"/><path class="mute" d="M11 6l4 4M15 6l-4 4"/></svg>
-          </button>
+          <div class="media-video-controls">
+            <button class="media-video-sound" type="button" aria-pressed="false" aria-label="Sound">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path class="spk" d="M2.5 6h2.5l3.5-3v10l-3.5-3H2.5z"/><path class="wave" d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.8a6 6 0 0 1 0 8.4"/><path class="mute" d="M11 6l4 4M15 6l-4 4"/></svg>
+            </button>
+            <input class="media-video-volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+          </div>
         </div>
       </figure>
 
@@ -150,9 +153,9 @@
 
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
-    <script src="assets/js/script.js?v=20261019d"></script>
+    <script src="assets/js/script.js?v=20261019e"></script>
     <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
-    <script src="assets/js/flipbook.js?v=20261019d"></script>
+    <script src="assets/js/flipbook.js?v=20261019e"></script>
     <script>
       new Flipbook('#dichotomy-flipbook', [
         'images/dichotomy/page-1.jpg',

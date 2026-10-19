@@ -798,12 +798,14 @@ if (cursorDot && cursorRing && window.matchMedia("(hover: hover)").matches) {
   });
 }
 
-// Case-study videos loop silently and never stop. The button turns sound
-// on and off; play() is re-called because some browsers pause a video
-// when its muted state changes.
+// Case-study videos loop silently and never stop. The ring turns sound on
+// and off; a hairline volume line appears beside it while sound is on.
+// play() is re-called because some browsers pause a video when its muted
+// state changes.
 document.querySelectorAll(".media-video").forEach((fig) => {
   const video = fig.querySelector("video");
   const btn = fig.querySelector(".media-video-sound");
+  const vol = fig.querySelector(".media-video-volume");
   if (!video) return;
   video.loop = true;
   const keepPlaying = () => {
@@ -813,11 +815,32 @@ document.querySelectorAll(".media-video").forEach((fig) => {
   video.addEventListener("pause", () => {
     if (!video.ended) keepPlaying();
   });
-  if (btn) {
-    btn.addEventListener("click", () => {
-      video.muted = !video.muted;
-      btn.setAttribute("aria-pressed", String(!video.muted));
-      keepPlaying();
-    });
+
+  const setSound = (on) => {
+    // coming back from a volume dragged to zero shouldn't stay silent
+    if (on && vol && Number(vol.value) === 0) {
+      vol.value = "0.8";
+      vol.dispatchEvent(new Event("input"));
+    }
+    video.muted = !on;
+    fig.classList.toggle("is-sound", on);
+    if (btn) btn.setAttribute("aria-pressed", String(on));
+    keepPlaying();
+  };
+
+  if (btn) btn.addEventListener("click", () => setSound(video.muted));
+
+  if (vol) {
+    // iOS keeps volume at 1 whatever the page sets; hide the control there
+    video.volume = 0.5;
+    if (video.volume !== 0.5) fig.classList.add("no-volume");
+    const applyVolume = () => {
+      const v = Number(vol.value);
+      video.volume = v;
+      vol.style.setProperty("--v", `${Math.round(v * 100)}%`);
+      if (v === 0 && !video.muted) setSound(false);
+    };
+    vol.addEventListener("input", applyVolume);
+    applyVolume();
   }
 });
