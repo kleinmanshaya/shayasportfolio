@@ -699,7 +699,7 @@ if (idxList) {
   const plateImgs = Array.from(document.querySelectorAll("#idxPlate img"));
   const spec = document.getElementById("idxSpec");
   const SPECS = [
-    ["OFF/NA", "Fashion platform \u00b7 Print, posters, web \u00b7 2026"],
+    // ["OFF/NA", "Fashion platform \u00b7 Print, posters, web \u00b7 2026"], // hidden temporarily
     ["Norish", "Menu system \u00b7 Hebrew & Latin \u00b7 2026"],
     ["Kis Library", "Pocket book series \u00b7 Cover system \u00b7 2025"],
     ["Museum of Typography", "Identity system \u00b7 Type as exhibition language \u00b7 2025"],
