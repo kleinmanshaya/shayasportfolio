@@ -910,8 +910,8 @@ html:not(.js) .hero-reg {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: contain;
-  object-position: left center; /* sit on the page margin, under the heading */
+  object-fit: cover; /* fill the frame edge to edge, like the full-bleed slides */
+  object-position: center center;
 }
 
 .highlights-arrow {
