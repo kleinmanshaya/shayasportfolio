@@ -911,7 +911,7 @@ html:not(.js) .hero-reg {
   height: 100%;
   display: block;
   object-fit: contain;
-  object-position: center center;
+  object-position: left center; /* sit on the page margin, under the heading */
 }
 
 .highlights-arrow {
