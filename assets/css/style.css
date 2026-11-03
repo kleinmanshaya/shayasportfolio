@@ -3096,6 +3096,112 @@ html:not(.js) .hero-reg {
     gap: 2.25rem;
   }
 }
+
+/* ---- Phones: breathing room ----------------------------------------
+   At 375px the 5% gutter is ~19px and every stack was set for desktop
+   proportions, so the page read as cramped. Phones only - nothing here
+   reaches the desktop layout. */
+@media (max-width: 640px) {
+  :root {
+    --gutter: 1.5rem;
+    --nav-box-w: calc(100% - 2 * var(--gutter));
+    --section-y: 4rem;
+  }
+
+  .container,
+  .project-intro,
+  .project-media,
+  .project-shell {
+    width: calc(100% - 2 * var(--gutter));
+  }
+
+  /* headings sat 7px above their intros */
+  .work-heading,
+  .highlights-heading {
+    margin-bottom: 0.85rem;
+  }
+
+  .work-intro {
+    margin-bottom: 2.25rem;
+  }
+
+  .facets {
+    margin-bottom: 0.75rem;
+  }
+
+  /* project list: more air between cards, and the meta line off the title */
+  .idx-row {
+    gap: 0.5rem;
+    padding-bottom: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .idx-rowfig {
+    margin-bottom: 1rem;
+  }
+
+  .principles-kicker {
+    margin-bottom: 2rem;
+  }
+
+  .principle {
+    padding: 1.5rem 0;
+  }
+
+  .highlights-intro {
+    margin-bottom: 1.75rem;
+  }
+
+  .highlights-meta {
+    margin-top: 1.25rem;
+  }
+
+  .about-text p + p,
+  .contact-details {
+    margin-top: 1.5rem;
+  }
+
+  /* footer: links in two even columns, CV and copyright stacked under them */
+  .site-footer {
+    padding-top: var(--section-y);
+    padding-bottom: 2.5rem;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .footer-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+    width: 100%;
+  }
+
+  /* case studies */
+  .project-intro {
+    padding-top: 2.75rem;
+    padding-bottom: 3rem;
+  }
+
+  .project-intro p + p {
+    margin-top: 1.5rem;
+  }
+
+  .project-meta {
+    margin-bottom: 2.5rem;
+  }
+
+  .project-media {
+    gap: 2.5rem;
+  }
+
+  .media-row {
+    gap: 2.5rem;
+  }
+}
 /* ============================================================
    Reduced motion - one blanket rule so nothing animates for
    anyone who has asked it not to. The site had 52 declared
