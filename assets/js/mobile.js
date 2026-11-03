@@ -11,6 +11,27 @@
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const pad2 = (n) => String(n).padStart(2, "0");
 
+  const drawTicks = (canvas) => {
+    const r = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = r.width * dpr;
+    canvas.height = r.height * dpr;
+    const g = canvas.getContext("2d");
+    g.scale(dpr, dpr);
+    g.fillStyle = "#c4c7cc";
+    const step = r.width / 100;
+    for (let i = 0; i <= 100; i++) {
+      const h = i % 10 === 0 ? r.height : i % 5 === 0 ? r.height * 0.6 : r.height * 0.35;
+      g.fillRect(Math.round(i * step), r.height - h, 1, h);
+    }
+  };
+
+  const caseStudy = document.querySelector(".project-page");
+  if (caseStudy) {
+    runCaseStudy(caseStudy);
+    return;
+  }
+
   const hero = document.getElementById("home");
   const list = document.getElementById("idxList");
   const items = list ? Array.from(list.querySelectorAll(".idx-item")) : [];
@@ -47,19 +68,7 @@
   }
 
   const drawRuler = () => {
-    if (!canvas) return;
-    const r = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = r.width * dpr;
-    canvas.height = r.height * dpr;
-    const g = canvas.getContext("2d");
-    g.scale(dpr, dpr);
-    g.fillStyle = "#c4c7cc";
-    const step = r.width / 100;
-    for (let i = 0; i <= 100; i++) {
-      const h = i % 10 === 0 ? r.height : i % 5 === 0 ? r.height * 0.6 : r.height * 0.35;
-      g.fillRect(Math.round(i * step), r.height - h, 1, h);
-    }
+    if (canvas) drawTicks(canvas);
   };
 
   // Neighbours recede and each image drifts against the swipe, so the
@@ -134,9 +143,7 @@
         width: `${from.width}px`,
         height: `${from.height}px`,
       });
-      const veil = document.createElement("div");
-      veil.className = "m-veil";
-      document.body.append(flyer, veil);
+      document.body.append(flyer);
       const fly = flyer.animate(
         [
           { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px` },
@@ -144,15 +151,14 @@
         ],
         { duration: 560, easing: "cubic-bezier(.7,0,.15,1)", fill: "forwards" }
       );
-      fly.finished.then(() => {
-        veil.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out", fill: "forwards" })
-          .finished.then(() => { window.location.href = row.href; });
-      });
+      // the case study opens on this same full-screen image, then settles it
+      try { sessionStorage.setItem("m-arrive", new URL(row.href).pathname); } catch (err) { /* private mode */ }
+      fly.finished.then(() => { window.location.href = row.href; });
     });
 
     // Back from a case study: the bfcache restores the page as we left it
     window.addEventListener("pageshow", (e) => {
-      if (e.persisted) document.querySelectorAll(".m-flyer, .m-veil").forEach((el) => el.remove());
+      if (e.persisted) document.querySelectorAll(".m-flyer").forEach((el) => el.remove());
     });
   }
 
@@ -247,4 +253,143 @@
   window.addEventListener("resize", relayout);
   window.addEventListener("load", relayout);
   relayout();
+
+  // ---- Case studies ---------------------------------------------------
+  function runCaseStudy(main) {
+    const hero = main.querySelector(".project-hero");
+
+    // Cover: the home card's thumbnail paints at once (it is cached), the
+    // full-size image fades over it when it arrives.
+    let cover = null;
+    let coverImg = null;
+    if (hero && hero.dataset.cover) {
+      cover = document.createElement("figure");
+      cover.className = "m-cover";
+      cover.setAttribute("aria-hidden", "true");
+      cover.style.backgroundImage = `url("${hero.dataset.coverThumb || hero.dataset.cover}")`;
+      coverImg = new Image();
+      coverImg.alt = "";
+      coverImg.decoding = "async";
+      coverImg.addEventListener("load", () => coverImg.classList.add("is-in"));
+      coverImg.src = hero.dataset.cover;
+      cover.appendChild(coverImg);
+      hero.prepend(cover);
+
+      let arrived = false;
+      try {
+        arrived = sessionStorage.getItem("m-arrive") === window.location.pathname;
+        sessionStorage.removeItem("m-arrive");
+      } catch (err) { /* private mode */ }
+      // Came from a home card: open on the full screen it left, then settle
+      if (arrived && !reduce) {
+        cover.animate(
+          [{ height: `${window.innerHeight}px` }, { height: getComputedStyle(cover).height }],
+          { duration: 800, delay: 120, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" }
+        );
+      }
+    }
+
+    // Figures get a number and their description, like plates in a report
+    const figs = Array.from(main.querySelectorAll(".media-block")).filter(
+      (f) => !f.closest(".print-media") && f.querySelector("img")
+    );
+    figs.forEach((fig, i) => {
+      if (fig.querySelector("figcaption")) return;
+      const alt = fig.querySelector("img").getAttribute("alt") || "";
+      const cap = document.createElement("figcaption");
+      cap.className = "m-fig";
+      cap.innerHTML = `<b>Fig. ${pad2(i + 1)}</b>`;
+      if (alt) {
+        const t = document.createElement("span");
+        t.textContent = alt;
+        cap.appendChild(t);
+      }
+      fig.appendChild(cap);
+    });
+
+    // Pairs and trios swipe; a count under each says there is more
+    const rows = Array.from(main.querySelectorAll(".media-row")).map((row) => {
+      const cells = Array.from(row.querySelectorAll(":scope > .media-block"));
+      const count = document.createElement("p");
+      count.className = "m-rowcount";
+      count.setAttribute("aria-hidden", "true");
+      count.innerHTML = `<span>${pad2(1)} / ${pad2(cells.length)}</span><span>Swipe</span>`;
+      row.after(count);
+      const update = () => {
+        const max = row.scrollWidth - row.clientWidth;
+        const i = max > 0 ? Math.round((row.scrollLeft / max) * (cells.length - 1)) : 0;
+        count.firstChild.textContent = `${pad2(i + 1)} / ${pad2(cells.length)}`;
+      };
+      row.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+      return update;
+    });
+
+    // Dock: back, a ruler for how far through the page you are, next
+    const backHref = (main.querySelector(".project-nav-back") || {}).href || "index.html#work";
+    const next = main.querySelector(".project-next");
+    const nextName = next ? (next.querySelector(".project-next-name") || next).textContent.trim() : "";
+    const dock = document.createElement("nav");
+    dock.className = "m-dock m-dock--case";
+    dock.setAttribute("aria-label", "Project");
+    dock.innerHTML =
+      `<a class="m-dock-btn" href="${backHref}" aria-label="All work">←</a>` +
+      '<div class="m-read" aria-hidden="true"><div class="m-ruler-track"><canvas></canvas><span class="m-needle"></span></div>' +
+      '<div class="m-ruler-meta"><span class="m-sec"></span><span class="m-num"></span></div></div>' +
+      (next ? `<a class="m-dock-btn m-dock-btn--next" href="${next.href}" aria-label="Next project: ${nextName}">→</a>` : "<span></span>");
+    document.body.appendChild(dock);
+
+    // back to the home page restores where you were on its rail
+    const back = dock.querySelector(".m-dock-btn");
+    back.addEventListener("click", (e) => {
+      try {
+        const ref = new URL(document.referrer);
+        if (ref.origin === window.location.origin && /\/(index\.html)?$/.test(ref.pathname)) {
+          e.preventDefault();
+          history.back();
+        }
+      } catch (err) { /* no referrer */ }
+    });
+
+    const canvas = dock.querySelector("canvas");
+    const needle = dock.querySelector(".m-needle");
+    const secEl = dock.querySelector(".m-sec");
+    const numEl = dock.querySelector(".m-num");
+    const titles = Array.from(main.querySelectorAll(".project-section-title"));
+    const intro = (main.querySelector(".project-hero-title") || {}).textContent || "";
+
+    let ticking = false;
+    const frame = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      const y = window.scrollY;
+      if (coverImg && !reduce && y < vh) coverImg.style.transform = `translateY(${(y * 0.3).toFixed(1)}px)`;
+      dock.classList.toggle("is-shown", y > (cover ? cover.offsetHeight * 0.5 : vh * 0.3));
+
+      const max = document.documentElement.scrollHeight - vh;
+      const p = max > 0 ? clamp(y / max) : 0;
+      needle.style.transform = `translateX(${(p * (needle.parentElement.clientWidth - 1)).toFixed(1)}px)`;
+
+      let sec = intro.trim();
+      titles.forEach((t) => { if (t.getBoundingClientRect().top < vh * 0.5) sec = t.textContent.trim(); });
+      secEl.textContent = sec;
+      let cur = 0;
+      figs.forEach((f, i) => { if (f.getBoundingClientRect().top < vh * 0.6) cur = i + 1; });
+      numEl.textContent = figs.length ? `Fig ${pad2(Math.max(1, cur))} / ${pad2(figs.length)}` : "";
+    };
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(frame);
+      }
+    }, { passive: true });
+    const relayoutCase = () => {
+      drawTicks(canvas);
+      rows.forEach((u) => u());
+      frame();
+    };
+    window.addEventListener("resize", relayoutCase);
+    window.addEventListener("load", relayoutCase);
+    relayoutCase();
+  }
 })();
