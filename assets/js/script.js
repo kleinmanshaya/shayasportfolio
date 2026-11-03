@@ -153,7 +153,13 @@ if (heroPlates) {
     // Finish registering when the lockup's centre reaches the top third of
     // the window, so the moment the plates lock is always on screen.
     const docTop = heroPlates.getBoundingClientRect().top + window.scrollY;
-    const span = Math.max(100, docTop + H / 2 - window.innerHeight * 0.33);
+    let span = Math.max(100, docTop + H / 2 - window.innerHeight * 0.33);
+    // Phones pin the hero (mobile.css), so register over the pinned stretch.
+    const pin = heroPlates.closest(".hero-inner");
+    if (pin && getComputedStyle(pin).position === "sticky") {
+      const hero = pin.closest(".hero");
+      span = Math.max(100, (hero.offsetTop + hero.offsetHeight - window.innerHeight) * 0.85);
+    }
     geo = { H, span, restR: 0, restK: hR + GAP, regR: (H - hR) / 2, regK: (H - hK) / 2 };
   };
 
@@ -170,6 +176,7 @@ if (heroPlates) {
     plateR.style.transform = `translateY(${yR.toFixed(1)}px)`;
     plateK.style.transform = `translateY(${yK.toFixed(1)}px)`;
     if (regValue) regValue.textContent = `${(MAX_MM * (1 - p)).toFixed(1)} mm`;
+    heroPlates.classList.toggle("is-registered", p >= 0.995);
     if (regMarkR) {
       const off = (14 * (1 - p)).toFixed(1);
       regMarkR.style.transform = `translate(${off}px, ${off}px)`;

@@ -1,0 +1,631 @@
+/* ============================================================
+   Phones only. index.html loads this file with
+   media="(max-width: 640px)", so nothing here reaches the desktop
+   layout. mobile.js adds the pieces that need markup (ruler, dock).
+
+   The idea: scroll is the press. The hero pins while its plates
+   come into register, the work sits on a rail of tall plates, and
+   red stays a registration colour - marks, the needle, one dot.
+   ============================================================ */
+
+:root {
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --m-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --m-faint: #d1d5db;
+}
+
+/* One small-caps voice for every label on the page */
+.m-label,
+.m-hint,
+.hero-tagline,
+.hero-reg,
+.plate-key,
+.facet,
+.idx-meta,
+.principle-label,
+.footer-nav a,
+.footer-cv-link,
+.footer-copy {
+  font-family: var(--mono);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Header: just the mark. The dock does the navigating. ---- */
+.site-header {
+  position: relative;
+  pointer-events: auto;
+  padding: 0.75rem 0 0;
+}
+
+.nav {
+  justify-content: space-between;
+  min-height: 0;
+  padding-inline: 0;
+  background: none;
+  border: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.site-header.scrolled .nav {
+  box-shadow: none;
+}
+
+.logo-img {
+  height: 32px;
+}
+
+.menu-toggle,
+.site-nav {
+  display: none !important;
+}
+
+/* ---- Hero: pinned while the plates come into register ---- */
+.hero,
+.hero.section {
+  display: block;
+  height: 165svh;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.hero-inner {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-label {
+  display: none;
+}
+
+.plate-key {
+  font-size: 0.6875rem;
+}
+
+.hero-plates::before {
+  content: "";
+  position: absolute;
+  inset: -0.9rem -0.5rem;
+  pointer-events: none;
+  opacity: 0.75;
+  --c: var(--accent);
+  background:
+    linear-gradient(var(--c), var(--c)) top left / 12px 1px,
+    linear-gradient(var(--c), var(--c)) top left / 1px 12px,
+    linear-gradient(var(--c), var(--c)) top right / 12px 1px,
+    linear-gradient(var(--c), var(--c)) top right / 1px 12px,
+    linear-gradient(var(--c), var(--c)) bottom left / 12px 1px,
+    linear-gradient(var(--c), var(--c)) bottom left / 1px 12px,
+    linear-gradient(var(--c), var(--c)) bottom right / 12px 1px,
+    linear-gradient(var(--c), var(--c)) bottom right / 1px 12px;
+  background-repeat: no-repeat;
+}
+
+/* the red mark stamps in the moment the plates lock */
+.js .hero-plates.is-fitted .reg-mark--r {
+  display: block;
+  left: auto;
+  right: -0.25rem;
+  top: -2.6rem;
+  width: 16px;
+  height: 16px;
+  opacity: 1;
+  scale: 0;
+  rotate: -90deg;
+  transition: scale 500ms var(--m-ease), rotate 500ms var(--m-ease);
+}
+
+.js .hero-plates.is-registered .reg-mark--r {
+  scale: 1;
+  rotate: 0deg;
+}
+
+.hero-foot {
+  margin-top: 2.25rem;
+  align-items: flex-end;
+}
+
+.hero-tagline {
+  font-size: 0.6875rem;
+}
+
+.hero-reg {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  transition: color 300ms;
+}
+
+.hero-plates.is-registered ~ .hero-foot .hero-reg {
+  color: var(--accent);
+}
+
+.hero-reg b {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.m-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.75rem;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: opacity 300ms;
+}
+
+.m-hint i {
+  position: relative;
+  width: 1px;
+  height: 28px;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.m-hint i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: var(--text);
+  animation: m-drip 1.6s var(--m-ease) infinite;
+}
+
+@keyframes m-drip {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(260%); }
+}
+
+/* ---- Section openers: a numbered label over an uppercase head ---- */
+.work-heading,
+.about-heading,
+.contact-heading,
+.highlights-heading {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.work-heading::before,
+.about-heading::before,
+.contact-heading::before,
+.principles-kicker::before {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.work-heading::before { content: "01 \2014  Work"; }
+.principles-kicker::before { content: "02 \2014  How I work"; margin-bottom: 1.25rem; }
+.about-heading::before { content: "03 \2014  About"; }
+.contact-heading::before { content: "04 \2014  Contact"; }
+
+.work-section,
+.work-section.section {
+  padding-top: 1.5rem;
+}
+
+.work-intro {
+  max-width: 30ch;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- Filters: one scrolling row of pills ---- */
+.facets {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter);
+  gap: 0.5rem;
+}
+
+.facets::-webkit-scrollbar {
+  display: none;
+}
+
+.facet {
+  flex: none;
+  min-height: 34px;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+}
+
+/* ---- Work: a rail of tall plates, the next one peeking in ---- */
+.idx {
+  display: block;
+}
+
+.idx-plate {
+  display: none;
+}
+
+.idx-list {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0 calc(-1 * var(--gutter));
+  padding-block: 1.25rem;
+  border-top: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  counter-reset: plate;
+}
+
+.idx-list::-webkit-scrollbar {
+  display: none;
+}
+
+.idx-list::before,
+.idx-list::after {
+  content: "";
+  flex: 0 0 calc(var(--gutter) - 0.75rem);
+}
+
+.idx-item {
+  display: block;
+  flex: 0 0 78%;
+  scroll-snap-align: start;
+  counter-increment: plate;
+  transform-origin: 50% 100%;
+  will-change: transform;
+  /* mobile.js sets scale and opacity every frame; easing them would lag the finger */
+  transition: none;
+}
+
+.idx-item.is-hidden {
+  display: none;
+}
+
+.idx-row,
+.idx-item:last-child .idx-row {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  aspect-ratio: 3 / 4.3;
+  margin: 0;
+  padding: 1.1rem;
+  overflow: hidden;
+  border: 0;
+  background: var(--border);
+  color: #ffffff;
+}
+
+.idx-rowfig,
+.idx-row .idx-rowfig {
+  position: absolute;
+  inset: 0 -12%;
+  width: 124%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.idx-row::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(transparent, rgba(10, 12, 18, 0.62));
+  pointer-events: none;
+}
+
+.idx-row::before {
+  content: counter(plate, decimal-leading-zero);
+  position: absolute;
+  z-index: 1;
+  top: 0.9rem;
+  left: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  mix-blend-mode: difference;
+}
+
+.idx-title,
+.idx-row.is-on .idx-title {
+  position: relative;
+  z-index: 1;
+  font-size: 2.35rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: 0;
+  color: #ffffff;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.idx-title::after {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 1px;
+  margin-top: 0.6rem;
+  background: currentColor;
+  transition: width 600ms var(--m-ease);
+}
+
+.idx-item.is-current .idx-title::after {
+  width: 44px;
+}
+
+.idx-meta,
+.idx-row.is-on .idx-meta {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: left;
+  white-space: normal;
+}
+
+/* ruler under the rail: the needle marks where you are */
+.m-ruler {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.m-ruler-track {
+  position: relative;
+  height: 14px;
+}
+
+.m-ruler canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.m-needle {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: 0;
+  width: 1px;
+  background: var(--accent);
+  will-change: transform;
+}
+
+.m-ruler-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.m-ruler-meta b {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* tapping a plate: its image opens to the full screen, then the page turns */
+.m-flyer {
+  position: fixed;
+  z-index: 3000;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.m-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 3001;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- How I work: the sentence fills with ink as you read ---- */
+.principles-kicker {
+  font-size: 1.45rem;
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.principles-kicker .m-w {
+  color: var(--m-faint);
+  transition: color 350ms;
+}
+
+.principles-kicker .m-w.on {
+  color: var(--text);
+}
+
+.principles-list {
+  margin-top: 1rem;
+}
+
+.principle,
+.principle:first-child {
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.principle:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.principle-label {
+  opacity: 1;
+  font-size: 0.6875rem;
+  font-weight: 400;
+}
+
+/* Highlights repeat the case studies; on a phone the rail already holds them */
+.highlights-section {
+  display: none;
+}
+
+/* ---- About + contact ---- */
+.about-section {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.about-text p:first-child {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.contact-section {
+  border-top: 1px solid var(--border);
+}
+
+/* the address is the point here; the availability line stays on desktop */
+.contact-availability {
+  display: none;
+}
+
+.contact-heading {
+  margin-bottom: 2rem;
+}
+
+.contact-link--primary {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.55rem;
+  font-family: "Big Shoulders Display", "Poppins", sans-serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.contact-link--primary::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--text);
+  transform: scaleX(0.12);
+  transform-origin: left;
+  transition: transform 800ms var(--m-ease);
+}
+
+.contact-link--primary.is-lit::after {
+  transform: none;
+}
+
+/* room under the footer so the dock never covers the last line */
+.site-footer {
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* ---- Dock: thumb reach, follows the section you're in ---- */
+.m-dock {
+  position: fixed;
+  z-index: 1100;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  width: min(calc(100% - 28px), 300px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  box-shadow: 0 8px 24px -14px rgba(17, 24, 39, 0.2);
+  transform: translate(-50%, 160%);
+  transition: transform 550ms var(--m-ease);
+}
+
+.m-dock.is-shown {
+  transform: translate(-50%, 0);
+}
+
+.m-dock a {
+  position: relative;
+  z-index: 1;
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 300ms;
+}
+
+.m-dock a.is-on {
+  color: var(--bg);
+}
+
+.m-dock a.is-on::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.m-dock-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  border-radius: 999px;
+  background: var(--text);
+  opacity: 0;
+  transition: transform 500ms var(--m-ease), width 500ms var(--m-ease), opacity 300ms;
+}
+
+/* ---- Asked for less motion: nothing pins, nothing drifts ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .hero.section {
+    height: auto;
+  }
+
+  .hero-inner {
+    position: static;
+    height: auto;
+    min-height: 88svh;
+  }
+
+  .m-hint {
+    display: none;
+  }
+}
