@@ -858,6 +858,13 @@ body:has(.project-page) .logo-img {
   aspect-ratio: auto;
 }
 
+/* cells waiting off to the side would otherwise fade in only after the
+   swipe, so a swipe landed on a blank plate */
+.js .media-row > .card-reveal {
+  opacity: 1;
+  transform: none;
+}
+
 .media-row > .media-block img {
   height: auto;
 }

@@ -127,9 +127,23 @@
 
     // Tapping a plate opens its image to the full screen, then the page
     // turns to the case study.
+    const railLeft = (li) =>
+      li.getBoundingClientRect().left - list.getBoundingClientRect().left + list.scrollLeft -
+      parseFloat(getComputedStyle(list).scrollPaddingLeft || 0);
+
     list.addEventListener("click", (e) => {
       const row = e.target.closest(".idx-row");
-      if (!row || reduce || e.metaKey || e.ctrlKey) return;
+      if (!row || e.metaKey || e.ctrlKey) return;
+      const li = row.closest(".idx-item");
+      // a tap on the plate peeking in at the edge brings it forward first
+      if (!li.classList.contains("is-current")) {
+        e.preventDefault();
+        list.scrollTo({ left: railLeft(li), behavior: reduce ? "auto" : "smooth" });
+        return;
+      }
+      // remember the plate, so coming back lands on it even without the bfcache
+      try { sessionStorage.setItem("m-rail", row.dataset.i); } catch (err) { /* private mode */ }
+      if (reduce) return;
       const img = row.querySelector(".idx-rowfig");
       if (!img || !img.complete) return;
       e.preventDefault();
@@ -142,6 +156,7 @@
         top: `${from.top}px`,
         width: `${from.width}px`,
         height: `${from.height}px`,
+        transform: "none",
       });
       document.body.append(flyer);
       const fly = flyer.animate(
@@ -153,13 +168,36 @@
       );
       // the case study opens on this same full-screen image, then settles it
       try { sessionStorage.setItem("m-arrive", new URL(row.href).pathname); } catch (err) { /* private mode */ }
-      fly.finished.then(() => { window.location.href = row.href; });
+      // a hidden page freezes animations, so a timer turns the page as well
+      let gone = false;
+      const go = () => {
+        if (gone) return;
+        gone = true;
+        window.location.href = row.href;
+        // if the case study never arrives (offline, slow), don't leave the page covered
+        setTimeout(() => flyer.remove(), 4000);
+      };
+      fly.finished.then(go);
+      setTimeout(go, 700);
     });
 
     // Back from a case study: the bfcache restores the page as we left it
     window.addEventListener("pageshow", (e) => {
       if (e.persisted) document.querySelectorAll(".m-flyer").forEach((el) => el.remove());
     });
+
+    // Without the bfcache the page reloads with the rail at its start;
+    // put back the plate that was opened
+    const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+    let saved = null;
+    try {
+      saved = sessionStorage.getItem("m-rail");
+      sessionStorage.removeItem("m-arrive");
+    } catch (err) { /* private mode */ }
+    if (nav && nav.type === "back_forward" && saved !== null) {
+      const li = items.find((it) => it.querySelector(".idx-row").dataset.i === saved);
+      if (li && !li.classList.contains("is-hidden")) list.scrollLeft = railLeft(li);
+    }
   }
 
   // ---- How I work: one word at a time fills with ink
